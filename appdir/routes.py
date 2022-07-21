@@ -7,12 +7,5 @@ from appdir.models import Name, Category, Users
 
 @app.route("/", methods=["GET", "POST"])
 def home():
-    admin_user = Users(
-        user_name="Admin",
-        password="ABC123",
-        is_superuser=True
-    )
-    db.session.add(admin_user)
-    db.session.commit()
-    users = list(Users.query.order_by(User.id).all())
+    users = list(Users.query.order_by(Users.id).all())
     return render_template("base.html", users=users)
