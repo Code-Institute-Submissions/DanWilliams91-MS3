@@ -8,9 +8,9 @@ from appdir.models import Name, Category, Users
 @app.route("/", methods=["GET", "POST"])
 def home():
     admin_user = Users(
-        user_name = "Admin",
-        password = "ABC123",
-        is_superuser = True
+        user_name="Admin",
+        password="ABC123",
+        is_superuser=True
     )
     db.session.add(admin_user)
     db.session.commit()
