@@ -8,7 +8,9 @@
 </head>
 <body>
     
-    Hello, World!
+    {% for user in users %}
+        <p>{{ user.user_name }}</p>
+    {% endfor %}
 
 </body>
 </html>
