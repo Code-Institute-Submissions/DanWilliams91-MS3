@@ -14,5 +14,5 @@ def home():
     )
     db.session.add(admin_user)
     db.session.commit()
-    users = list(User.query.order_by(User.id).all())
+    users = list(Users.query.order_by(User.id).all())
     return render_template("base.html", users=users)
