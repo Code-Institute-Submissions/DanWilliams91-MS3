@@ -4,13 +4,83 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    <title>Simple Foods</title>
 </head>
-<body>
-    
-    {% for user in users %}
-        <p>{{ user.user_name }}</p>
-    {% endfor %}
+<body> 
 
+    <!-- Dropdown Structure Start -->
+    <ul id="dropdown1" class="dropdown-content">
+        <li><a href="#!">Latest</a></li>
+        <li class="divider"></li>
+        <li><a href="#!">Top-Rated</a></li>
+        <li class="divider"></li>
+        <li><a href="#!">Categories</a></li>
+    </ul>
+    <ul id="dropdown2" class="dropdown-content">
+        <li><a href="#!">Favourites</a></li>
+        <li class="divider"></li>
+        <li><a href="#!">Log Out</a></li>
+    </ul>
+    <!-- Dropdown Structure End -->
+
+    <!-- Navbar Start -->
+    <nav>
+        <div class="nav-wrapper">
+        <a href="#!" class="brand-logo">Simple Foods</a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons"><i class="fa-solid fa-bars"></i></i></a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="#!">Home</a></li>
+            <!-- Dropdown Trigger 1 -->
+            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Browse<i class="material-icons right"><i class="fa-solid fa-square-caret-down"></i></i></a></li>
+            <li><a href="#!">Add Recipe</a></li>
+            {% if session.user %}
+                <!-- Dropdown Trigger 2 -->
+                <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Profile<i class="material-icons right"><i class="fa-solid fa-square-caret-down"></i></i></a></li>
+            {% else %}
+                <li><a href="#!">Log In/Register</a></li>
+            {% endif %}
+        </ul>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Mobile Sidenav Start -->
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="#!">Home</a></li>
+        <li><a href="#!">Browse</a></li>
+        <li><a href="#!">Add Recipe</a></li>
+        {% if session.user %}
+            <li><a href="#!">Favourites</a></li>
+            <li><a href="#!">Log Out</a></li>
+        {% else %}
+            <li><a href="#!">Log In/Register</a></li>
+        {% endif %}
+    </ul>
+    <!-- Mobile Sidenav End -->
+
+    <!-- Main Content Section Start -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <!-- Main Content Section End -->
+
+    <!-- Footer Start -->
+    <footer class="page-footer">
+        <div class="footer-copyright">
+            <div class="container">
+                <span class="grey-text text-lighten-4 left">© 2022 Dan Williams</span>
+                <span class="grey-text text-lighten-4 right">For educational purposes only</span>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer End -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
