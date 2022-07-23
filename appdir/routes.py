@@ -5,7 +5,7 @@ from appdir import app, db, mongo
 from appdir.models import Name, Category, Users
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
+@app.route("/home")
 def home():
-    users = list(Users.query.order_by(Users.id).all())
-    return render_template("base.html", users=users)
+    return render_template("home.html")

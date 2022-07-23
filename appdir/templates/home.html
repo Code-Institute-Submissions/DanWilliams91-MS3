@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h1 class="page-title theme-color center">Welcome to Simply Foods</h1>
+    <div class="container">
+        <div class="row valign-wrapper valign-workaround">
+            <div class="col s12 m8">
+                <img class="responsive-img circle" src="{{ url_for('static', filename='images/prawn-pasta.jpg') }}"
+                    alt="A prawn pasta dish">
+            </div>
+            <div class="col s12 m4 theme-color center main-text">
+                Simply Foods is a platform which enables its users to add and share recipe ideas.
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row valign-wrapper valign-workaround">
+            <div class="col s12 m8 push-m4">
+                <img class="responsive-img circle" src="{{ url_for('static', filename='images/canape.jpg') }}"
+                    alt="A prawn pasta dish">
+            </div>
+            <div class="col s12 m4 pull-m8 theme-color center main-text">
+                Recipes can be viewed by everyone and can be saved by registered users to refer to later.
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row valign-wrapper valign-workaround">
+            <div class="col s12 m8">
+                <img class="responsive-img circle" src="{{ url_for('static', filename='images/strawberry-dessert.jpg') }}"
+                    alt="A prawn pasta dish">
+            </div>
+            <div class="col s12 m4 theme-color center main-text">
+                Have a great recipe to share, or just need a platform to save it for later use?
+                <br>
+                <a href="#!">JOIN HERE</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
