@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h1 class="page-title theme-color center">Register</h1>
+    <div class="container">
+        <p class="col s12 m8 offset-m2 theme-color center main-text">To register a new account, please complete the form
+            below.</p>
+        <p class="col s12 m8 offset-m2 theme-color center main-text">
+            Already Registered?
+            <a href="{{ url_for('register') }}" class="main-text light-blue-text">Log In Here</a>
+        </p>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes container center">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- 
+    Registration form begins here. Format adapted from 
+    https://github.com/Code-Institute-Solutions/CombinedTaskManager2022/blob/main/taskmanager/templates/register.html 
+    -->
+    <div class="row">
+        <form class="col s12 m8 offset-m2" method="POST" action="{{ url_for('register') }}">
+            <div class="card-panel">
+                <!-- username -->
+                <div class="row">
+					<div class="input-field col s12">
+						<i class="fa-solid fa-user-tag prefix red-text text-accent-4"></i>
+						<input id="username" name="username" type="text" minlength="3"
+                            maxlength="30" pattern="^[a-zA-Z0-9]{5,15}$" class="validate" required>
+						<label for="username">Username</label>
+					</div>
+                </div>
+                <!-- password -->
+                <div class="row">
+                    <div class="input-field col s12">
+						<i class="fa-solid fa-user-lock prefix red-text text-accent-4"></i>
+                        <input id="password" name="password" type="password" minlength="5"
+                            maxlength="15" pattern="^[a-zA-Z0-9]{5,15}$" class="validate" required>
+                        <label for="password">Password</label>
+                    </div>
+                </div>
+                <!-- register -->
+                <div class="row">
+                    <button type="submit" class="col s12 btn-large red accent-4 text-shadow">
+                        Register <i class="fa-solid fa-right-to-bracket"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Registration form ends here -->
+    
+{% endblock %}

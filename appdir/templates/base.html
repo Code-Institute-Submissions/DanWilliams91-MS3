@@ -40,7 +40,8 @@
                 <!-- Dropdown Trigger 2 -->
                 <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Profile<i class="material-icons right"><i class="fa-solid fa-square-caret-down"></i></i></a></li>
             {% else %}
-                <li><a href="#!">Log In/Register</a></li>
+                <li><a href="#!">Log In</a></li>
+                <li><a href="{{ url_for('register') }}">Register</a></li>
             {% endif %}
         </ul>
         </div>
@@ -56,7 +57,8 @@
             <li><a href="#!">Favourites</a></li>
             <li><a href="#!">Log Out</a></li>
         {% else %}
-            <li><a href="#!">Log In/Register</a></li>
+        <li><a href="#!">Log In</a></li>
+        <li><a href="{{ url_for('register') }}">Register</a></li>
         {% endif %}
     </ul>
     <!-- Mobile Sidenav End -->

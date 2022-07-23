@@ -12,6 +12,12 @@ body {
 
 main {
     flex: 1 0 auto;
+    padding-top: 50px;
+}
+
+nav {
+    position: fixed;
+    z-index: 100;
 }
   
 .brand-logo,
@@ -31,6 +37,13 @@ main {
     font-size: x-large;
 }
 
+.flashes {
+    color: var(--theme-color);
+    font-weight: 700;
+    font-size: x-large;
+    background-color: yellow;
+}
+
 .page-footer,
 nav {
     background-color: var(--theme-color);
@@ -43,7 +56,7 @@ nav {
     bottom: 20px;
     right: 30px;
     z-index: 99;
-    border: none;
+    border: 1px white solid;
     outline: none;
     background-color: var(--theme-color);
     color: white;
