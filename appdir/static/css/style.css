@@ -12,7 +12,7 @@ body {
 
 main {
     flex: 1 0 auto;
-    padding-top: 50px;
+    padding-top: 70px;
 }
 
 nav {
@@ -49,7 +49,8 @@ nav {
     background-color: var(--theme-color);
 }
 
-/* Code taken and adapted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp */
+/* Code beginning here taken and adapted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp */
+
 #scroll-btn {
     display: none;
     position: fixed;
@@ -69,3 +70,14 @@ nav {
   #scroll-btn:hover {
     background-color: #555;
   }
+
+/* Code ending here taken and adapted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp */
+
+/* Media queries begin here */
+
+/* @media screen and (min-width: 600px) {
+
+  
+} */
+
+/* Media queries end here */

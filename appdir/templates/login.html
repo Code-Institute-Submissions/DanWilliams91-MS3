@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h2 class="page-title theme-color center">Register</h2>
+    <h2 class="page-title theme-color center">Log In</h2>
     <div class="container">
-        <p class="col s12 m8 offset-m2 theme-color center main-text">To register a new account, please complete the form
+        <p class="col s12 m8 offset-m2 theme-color center main-text">To log into your account, please complete the form
             below.</p>
         <p class="col s12 m8 offset-m2 theme-color center main-text">
-            Already Registered?
-            <a href="{{ url_for('login') }}" class="main-text light-blue-text">Log In Here</a>
+            Not Yet Registered?
+            <a href="{{ url_for('register') }}" class="main-text light-blue-text">Register Here</a>
         </p>
     </div>
 
@@ -22,11 +22,11 @@
     {% endwith %}
 
     <!-- 
-    Registration form begins here. Format adapted from 
+    Login form begins here. Format adapted from 
     https://github.com/Code-Institute-Solutions/CombinedTaskManager2022/blob/main/taskmanager/templates/register.html 
     -->
     <div class="row">
-        <form class="col s12 m8 offset-m2" method="POST" action="{{ url_for('register') }}">
+        <form class="col s12 m8 offset-m2" method="POST" action="{{ url_for('login') }}">
             <div class="card-panel">
                 <!-- username -->
                 <div class="row">
@@ -46,15 +46,15 @@
                         <label for="password">Password</label>
                     </div>
                 </div>
-                <!-- register -->
+                <!-- log in -->
                 <div class="row">
                     <button type="submit" class="col s12 btn-large red accent-4 text-shadow">
-                        Register <i class="fa-solid fa-right-to-bracket"></i>
+                        Log In <i class="fa-solid fa-right-to-bracket"></i>
                     </button>
                 </div>
             </div>
         </form>
     </div>
-    <!-- Registration form ends here -->
+    <!-- Login form ends here -->
     
 {% endblock %}

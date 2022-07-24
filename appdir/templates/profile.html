@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flashes container center">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+
+    <h2 class="page-title theme-color center">{{ username }}'s Profile Options</h2>
+
+    <div class="row">
+        <div class="col s12 m6 l3">
+            <div class="card red darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">My Recipes</span>
+                    <p>View and manage recipes you've added to the website.</p>
+                </div>
+                <div class="card-action">
+                    <a href="#">Go to My Recipes</a>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m6 l3">
+            <div class="card red darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">My Favourites</span>
+                    <p>View and manage recipes you've added to your Favourite collection.</p>
+                </div>
+                <div class="card-action">
+                    <a href="#">Go to My Favourites</a>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m6 l3">
+            <div class="card red darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">Add Recipe</span>
+                    <p>Add a new recipe to the website.</p>
+                </div>
+                <div class="card-action">
+                    <a href="#">Add Recipe</a>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m6 l3">
+            <div class="card red darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">Log Out</span>
+                    <p>Log out of the website.</p>
+                </div>
+                <div class="card-action">
+                    <a href="{{ url_for('logout') }}">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if session.is_superuser %}
+        <h2 class="page-title theme-color center">{{ username }}'s Superuser Options</h2>
+
+        <div class="row">
+            <div class="col s12 m6 l3">
+                <div class="card red darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">My Recipes</span>
+                        <p>View and manage recipes you've added to the website.</p>
+                    </div>
+                    <div class="card-action">
+                        <a href="#">Go to My Recipes</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6 l3">
+                <div class="card red darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">My Favourites</span>
+                        <p>View and manage recipes you've added to your Favourite collection.</p>
+                    </div>
+                    <div class="card-action">
+                        <a href="#">Go to My Favourites</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6 l3">
+                <div class="card red darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">Add Recipe</span>
+                        <p>Add a new recipe to the website.</p>
+                    </div>
+                    <div class="card-action">
+                        <a href="#">Add Recipe</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6 l3">
+                <div class="card red darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">Log Out</span>
+                        <p>Log out of the website.</p>
+                    </div>
+                    <div class="card-action">
+                        <a href="{{ url_for('logout') }}">Log Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
