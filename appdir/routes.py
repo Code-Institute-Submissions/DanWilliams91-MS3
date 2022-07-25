@@ -45,14 +45,14 @@ def register():
 def profile(username):
         
     if "user" in session:
-        
-        current_user = Users.query.filter(Users.user_name==session["user"])
-        # if current_user[0].is_superuser:
-        is_superuser = True if current_user[0].is_superuser else False
-        
-        return render_template("profile.html", username=session["user"], is_superuser=is_superuser)
+        return render_template("profile.html", username=session["user"], is_superuser=check_user_level())
 
     return redirect(url_for("login"))
+
+
+def check_user_level():
+    current_user = Users.query.filter(Users.user_name==session["user"])
+    return True if current_user[0].is_superuser else False        
 
 
 @app.route("/logout")
@@ -90,3 +90,31 @@ def login():
             return redirect(url_for("login"))
 
     return render_template("login.html")
+
+
+@app.route("/get_categories")
+def get_categories():
+
+    if check_user_level()==False:
+        flash("You must be a superuser to manage categories!")
+        return redirect(url_for(
+            "profile", username=session["user"]))
+
+    categories = list(Category.query.order_by(Category.id).all())
+    return render_template("categories.html", categories=categories)
+
+
+@app.route("/add_category", methods=["GET", "POST"])
+def add_category():
+
+    if check_user_level()==False:
+        flash("You must be a superuser to manage categories!")
+        return redirect(url_for(
+            "profile", username=session["user"]))
+
+    if request.method == "POST":
+        category = Category(category_name=request.form.get("category_name"))
+        db.session.add(category)
+        db.session.commit()
+        return redirect(url_for("get_categories"))
+    return render_template("add_category.html")
