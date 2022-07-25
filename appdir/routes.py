@@ -46,7 +46,11 @@ def profile(username):
         
     if "user" in session:
         
-        return render_template("profile.html", username=session["user"])
+        current_user = Users.query.filter(Users.user_name==session["user"])
+        # if current_user[0].is_superuser:
+        is_superuser = True if current_user[0].is_superuser else False
+        
+        return render_template("profile.html", username=session["user"], is_superuser=is_superuser)
 
     return redirect(url_for("login"))
 
@@ -67,7 +71,6 @@ def login():
             Users.user_name == request.form.get("username").lower()).all()
 
         if existing_user:
-            print(request.form.get("username"))
             # ensure hashed password matches user input
             if check_password_hash(
                     existing_user[0].password, request.form.get("password")):
