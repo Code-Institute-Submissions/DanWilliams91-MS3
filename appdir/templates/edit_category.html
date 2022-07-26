@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h2 class="page-title theme-color center">Add Category</h2>
+
+    <div class="row card-panel grey lighten-5">
+        <form class="col s12" method="POST" action="{{ url_for('edit_category', category_id=category.id) }}">
+            <!-- category name -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="fas fa-folder-open prefix red-text text-darken-2"></i>
+                    <input id="category_name" name="category_name" minlength="3" maxlength="25" type="text" class="validate"
+                    value="{{ category.category_name }}" required>
+                    <label for="category_name">Category Name</label>
+                </div>
+            </div>
+            <!-- submit button -->
+            <div class="row">
+                <div class="col s12 center-align button-div">
+                    <button type="submit" class="btn-large green darken-2 text-shadow">
+                        Update Category <i class="fas fa-plus-square right"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col s12 center-align button-div">
+                <a href="{{ url_for('get_categories') }}">
+                    <button class=" btn-large red darken-4 text-shadow">
+                        Cancel <i class="fas fa-plus-square right"></i>
+                    </button></a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
