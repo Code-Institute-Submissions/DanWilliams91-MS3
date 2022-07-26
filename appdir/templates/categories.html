@@ -11,6 +11,16 @@
         </div>
     </div>
 
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes container center">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    
     <div class="row">
         {% for category in categories %}
             <div class="col s12 m4 l3">
@@ -20,7 +30,25 @@
                     </div>
                     <div class="card-action">
                         <a href="{{ url_for('edit_category', category_id=category.id) }}" class="btn green">Edit</a>
-                        <a href="#" class="btn red darken-4">Delete</a>
+                        <!-- Modal Trigger -->
+                        <button data-target="modal_delete_{{ category.category_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</button>
+                    </div>
+                    <!-- Modal Structure -->
+                    <div id="modal_delete_{{ category.category_name.lower() }}" class="modal">
+                        <div class="modal-content red accent-4 white-text">
+                            <h3>Warning!</h3>
+                            <p>Deleting a category will also delete all recipes which are assigned to the category.</p>
+                            <p>Are you sure you want to permanently delete the <strong>{{ category.category_name }}</strong> category and all its associated recipes?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col s6 center">
+                                <a href="{{ url_for('delete_category', category_id=category.id) }}"
+                                    class="modal-action btn red darken-4 white-text">DELETE CATEGORY</a>
+                            </div>
+                            <div class="col s6 center">
+                                <button class="btn green white-text modal-action modal-close">CANCEL</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

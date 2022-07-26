@@ -132,3 +132,18 @@ def edit_category(category_id):
         db.session.commit()
         return redirect(url_for("get_categories"))
     return render_template("edit_category.html", category=category)
+
+
+@app.route("/delete_category/<int:category_id>")
+def delete_category(category_id):
+    if check_user_level()==False:
+        flash("You must be a superuser to manage categories!")
+        return redirect(url_for(
+            "profile", username=session["user"]))
+
+    category = Category.query.get_or_404(category_id)
+    db.session.delete(category)
+    db.session.commit()
+    mongo.db.tasks.delete_many({"category_id": str(category_id)})
+    flash("Category deleted successfully.")
+    return redirect(url_for("get_categories"))

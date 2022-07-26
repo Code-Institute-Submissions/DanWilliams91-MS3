@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $(".dropdown-trigger").dropdown();
     $('.sidenav').sidenav();
+    $('.modal').modal();
     checkScreenSize();
     });
 
@@ -53,5 +54,11 @@ $(document).ready(function () {
     $(window).on("scroll", function() {
         scrollFunction();
     });
+
+
+    /** Calls the topFunction function when the "Go to top" button is clicked */
+    $("#scroll-btn").on("click", function() {
+        topFunction()
+    })
 
 //Event handlers end here

@@ -48,6 +48,13 @@ nav {
     margin: 0.5em auto
 }
 
+.modal-action,
+.modal {
+    margin: 0 auto;
+    color: var(--theme-color)
+}
+
+
 .page-footer,
 nav {
     background-color: var(--theme-color);
