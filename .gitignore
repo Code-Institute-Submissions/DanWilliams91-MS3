@@ -7,5 +7,3 @@ __pycache__/
 node_modules/
 .github/
 cloudinary_python.txt
-appdir/templates/register_existing.html
-sql-testing.py

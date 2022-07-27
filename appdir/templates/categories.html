@@ -20,39 +20,43 @@
             </ul>
         {% endif %}
     {% endwith %}
-    
+
     <div class="row">
-        {% for category in categories %}
-            <div class="col s12 m4 l3">
-                <div class="card red accent-5 text-shadow center-align">
-                    <div class="card-content white-text">
-                        <span class="card-title">{{ category.category_name }}</span>
-                    </div>
-                    <div class="card-action">
-                        <a href="{{ url_for('edit_category', category_id=category.id) }}" class="btn green">Edit</a>
-                        <!-- Modal Trigger -->
-                        <button data-target="modal_delete_{{ category.category_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</button>
-                    </div>
-                    <!-- Modal Structure -->
-                    <div id="modal_delete_{{ category.category_name.lower() }}" class="modal">
-                        <div class="modal-content red accent-4 white-text">
-                            <h3>Warning!</h3>
-                            <p>Deleting a category will also delete all recipes which are assigned to the category.</p>
-                            <p>Are you sure you want to permanently delete the <strong>{{ category.category_name }}</strong> category and all its associated recipes?</p>
+        {% if categories|length > 0 %}
+            {% for category in categories %}
+                <div class="col s12 m4 l3">
+                    <div class="card red accent-5 text-shadow center-align">
+                        <div class="card-content white-text">
+                            <span class="card-title">{{ category.category_name }}</span>
                         </div>
-                        <div class="modal-footer">
-                            <div class="col s6 center">
-                                <a href="{{ url_for('delete_category', category_id=category.id) }}"
-                                    class="modal-action btn red darken-4 white-text">DELETE CATEGORY</a>
+                        <div class="card-action">
+                            <a href="{{ url_for('edit_category', category_id=category.id) }}" class="btn green">Edit</a>
+                            <!-- Modal Trigger -->
+                            <button data-target="modal_delete_{{ category.category_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</button>
+                        </div>
+                        <!-- Modal Structure -->
+                        <div id="modal_delete_{{ category.category_name.lower() }}" class="modal">
+                            <div class="modal-content red accent-4 white-text">
+                                <h3>Warning!</h3>
+                                <p>Deleting a category will also delete all recipes which are assigned to the category.</p>
+                                <p>Are you sure you want to permanently delete the <strong>{{ category.category_name }}</strong> category and all its associated recipes?</p>
                             </div>
-                            <div class="col s6 center">
-                                <button class="btn green white-text modal-action modal-close">CANCEL</button>
+                            <div class="modal-footer">
+                                <div class="col s6 center">
+                                    <a href="{{ url_for('delete_category', category_id=category.id) }}"
+                                        class="modal-action btn red darken-4 white-text">DELETE CATEGORY</a>
+                                </div>
+                                <div class="col s6 center">
+                                    <button class="modal-action modal-close btn green white-text">CANCEL</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <h3 class="theme-color center">No results found</h2>
+        {% endif %}
     </div>
 
 {% endblock %}

@@ -19,6 +19,11 @@ nav {
     position: fixed;
     z-index: 100;
 }
+
+th {
+    background-color: var(--theme-color);
+    color: white
+}
   
 .brand-logo,
 .page-title {
@@ -54,6 +59,9 @@ nav {
     color: var(--theme-color)
 }
 
+.modal-footer-workaround {
+    margin-top: 20px;
+}
 
 .page-footer,
 nav {

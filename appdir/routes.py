@@ -13,6 +13,7 @@ def home():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    
     if request.method == "POST":
         
         # check if username already exists in db
@@ -65,6 +66,7 @@ def logout():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+
     if request.method == "POST":
         # check if username exists in db
         existing_user = Users.query.filter(
@@ -106,6 +108,7 @@ def get_categories():
 
 @app.route("/add_category", methods=["GET", "POST"])
 def add_category():
+
     if check_user_level()==False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
@@ -121,6 +124,7 @@ def add_category():
 
 @app.route("/edit_category/<int:category_id>", methods=["GET", "POST"])
 def edit_category(category_id):
+
     if check_user_level()==False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
@@ -136,6 +140,7 @@ def edit_category(category_id):
 
 @app.route("/delete_category/<int:category_id>")
 def delete_category(category_id):
+
     if check_user_level()==False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
@@ -147,3 +152,51 @@ def delete_category(category_id):
     mongo.db.tasks.delete_many({"category_id": str(category_id)})
     flash("Category deleted successfully.")
     return redirect(url_for("get_categories"))
+
+
+@app.route("/get_users")
+def get_users():
+
+    if check_user_level()==False:
+        flash("You must be a superuser to manage users!")
+        return redirect(url_for(
+            "profile", username=session["user"]))
+
+    users = list(Users.query.order_by(Users.id).all())
+    return render_template("users.html", users=users)
+
+
+@app.route("/delete_user/<int:user_id>")
+def delete_user(user_id):
+
+    if check_user_level()==False:
+        flash("You must be a superuser to manage users!")
+        return redirect(url_for(
+            "profile", username=session["user"]))
+
+    user = Users.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    mongo.db.tasks.delete_many({"user_id": str(user_id)})
+    flash("User deleted successfully.")
+    return redirect(url_for("get_users"))
+
+
+@app.route("/edit_user/<int:user_id>", methods=["GET", "POST"])
+def edit_user(user_id):
+
+    if check_user_level()==False:
+        flash("You must be a superuser to manage users!")
+        return redirect(url_for(
+            "profile", username=session["user"]))
+
+    user = Users.query.get_or_404(user_id)
+    if request.method == "POST":
+        user.user_name = request.form.get("user_name")
+        if request.form.get("is_superuser") == "True":
+            user.is_superuser = True
+        else:
+            user.is_superuser = False
+        db.session.commit()
+        return redirect(url_for("get_users"))
+    return render_template("edit_user.html", user=user)
