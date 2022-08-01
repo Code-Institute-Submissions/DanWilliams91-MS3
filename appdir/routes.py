@@ -13,7 +13,7 @@ def home():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    
+
     if request.method == "POST":
         
         # check if username already exists in db
@@ -32,21 +32,28 @@ def register():
         
         db.session.add(user)
         db.session.commit()
-
-        # put the new user into 'session' cookie
-        session["user"] = request.form.get("username").lower()
+        session["user"] = request.form.get("username").lower() # put the new user into 'session' cookie
         flash("Registration successful! Welcome, {}.".format(
             request.form.get("username")))
         return redirect(url_for("profile", username=session["user"]))
 
-    return render_template("register.html")
+    if "user" in session:
+        flash(
+            "A user is already logged in - \
+            please ensure they are logged out before a new user is created.")
+        return redirect(url_for("profile", username=session["user"]))
+    else:
+        return render_template("register.html")
 
 
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
         
     if "user" in session:
-        return render_template("profile.html", username=session["user"], is_superuser=check_user_level())
+        return render_template(
+            "profile.html",
+            username=session["user"],
+            is_superuser=check_user_level())
 
     return redirect(url_for("login"))
 
@@ -91,29 +98,31 @@ def login():
             flash("Incorrect Username and/or Password")
             return redirect(url_for("login"))
 
-    return render_template("login.html")
+    if "user" in session:
+        flash(
+            "A user is already logged in - \
+                please ensure they are logged out before a new user logs in.")
+        return redirect(url_for("profile", username=session["user"]))
+    else:
+        return render_template("login.html")
 
 
 @app.route("/get_categories")
 def get_categories():
-
     if check_user_level()==False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))
-
     categories = list(Category.query.order_by(Category.id).all())
     return render_template("categories.html", categories=categories)
 
 
 @app.route("/add_category", methods=["GET", "POST"])
 def add_category():
-
     if check_user_level()==False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))
-
     if request.method == "POST":
         category = Category(category_name=request.form.get("category_name"))
         db.session.add(category)
@@ -124,12 +133,10 @@ def add_category():
 
 @app.route("/edit_category/<int:category_id>", methods=["GET", "POST"])
 def edit_category(category_id):
-
     if check_user_level()==False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
-            "profile", username=session["user"]))
-    
+            "profile", username=session["user"]))    
     category = Category.query.get_or_404(category_id)
     if request.method == "POST":
         category.category_name = request.form.get("category_name")
@@ -140,12 +147,10 @@ def edit_category(category_id):
 
 @app.route("/delete_category/<int:category_id>")
 def delete_category(category_id):
-
     if check_user_level()==False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))
-
     category = Category.query.get_or_404(category_id)
     db.session.delete(category)
     db.session.commit()
@@ -156,40 +161,33 @@ def delete_category(category_id):
 
 @app.route("/get_users")
 def get_users():
-
     if check_user_level()==False:
         flash("You must be a superuser to manage users!")
         return redirect(url_for(
             "profile", username=session["user"]))
-
     users = list(Users.query.order_by(Users.id).all())
     return render_template("users.html", users=users)
 
 
 @app.route("/delete_user/<int:user_id>")
 def delete_user(user_id):
-
     if check_user_level()==False:
         flash("You must be a superuser to manage users!")
         return redirect(url_for(
             "profile", username=session["user"]))
-
     user = Users.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()
-    mongo.db.tasks.delete_many({"user_id": str(user_id)})
     flash("User deleted successfully.")
     return redirect(url_for("get_users"))
 
 
 @app.route("/edit_user/<int:user_id>", methods=["GET", "POST"])
 def edit_user(user_id):
-
     if check_user_level()==False:
         flash("You must be a superuser to manage users!")
         return redirect(url_for(
             "profile", username=session["user"]))
-
     user = Users.query.get_or_404(user_id)
     if request.method == "POST":
         user.user_name = request.form.get("user_name")
@@ -200,3 +198,72 @@ def edit_user(user_id):
         db.session.commit()
         return redirect(url_for("get_users"))
     return render_template("edit_user.html", user=user)
+
+
+@app.route("/my_recipes")
+def my_recipes():
+    recipes = list(Name.query.order_by(Name.recipe_name).all())
+    owner_recipes = list(mongo.db.recipes.find({"created_by": session["user"]}))
+    user_recipes = []
+    for recipe in recipes:
+        for owned_recipe in owner_recipes:
+            if recipe.id == owned_recipe["id"]:
+                user_recipes.append(recipe)
+    categories = list(Category.query.order_by(Category.id).all())
+    return render_template(
+        "my_recipes.html", user_recipes=user_recipes, categories=categories)
+
+
+@app.route("/get_recipes")
+def get_recipes():
+    if check_user_level()==False:
+        return redirect(url_for("my_recipes"))
+    recipes = list(Name.query.order_by(Name.recipe_name).all())
+    categories = list(Category.query.order_by(Category.id).all())
+    mongo_recipes = list(mongo.db.recipes.find())
+    return render_template(
+        "get_recipes.html", mongo_recipes=mongo_recipes, recipes=recipes, categories=categories)
+
+
+@app.route("/add_recipe", methods=["GET", "POST"])
+def add_recipe():    
+    if "user" not in session:
+        flash("You need to be logged in to add a recipe.")
+        return redirect(url_for("login"))
+    if request.method == "POST":
+        recipe_main = Name(
+            recipe_name=request.form.get("recipe_name"),
+            category_id=int(request.form.get("category_id"))
+        )
+        db.session.add(recipe_main)
+        db.session.commit()
+        new_recipe = Name.query.filter(
+            Name.recipe_name == request.form.get("recipe_name"))
+        recipe_details = {
+            "id": new_recipe[0].id,
+            "ingredients": request.form.get("ingredients"),
+            "instructions": request.form.get("instructions"),
+            "created_by": session["user"]
+        }
+        db.session.add(recipe_main)
+        db.session.commit()
+        mongo.db.recipes.insert_one(recipe_details)
+        flash("Recipe saved")
+        return redirect(url_for("my_recipes"))
+    categories = list(Category.query.order_by(Category.category_name).all())
+    return render_template("add_recipe.html", categories=categories)
+
+
+@app.route("/delete_recipe/<int:recipe_id>")
+def delete_recipe(recipe_id):
+    recipe = Name.query.get_or_404(recipe_id)
+    mongo_recipe = list(mongo.db.recipes.find({"id": recipe.id}))[0]
+    if session["user"] not in mongo_recipe.values():
+        if check_user_level()==False:
+            flash("You can only delete your own recipes!")
+            return redirect(url_for("get_recipes"))
+    db.session.delete(recipe)
+    db.session.commit()
+    mongo.db.recipes.delete_one(mongo_recipe)
+    flash("Recipe deleted successfully.")
+    return redirect(url_for("get_recipes"))

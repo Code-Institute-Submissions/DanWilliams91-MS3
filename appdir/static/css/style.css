@@ -20,9 +20,14 @@ nav {
     z-index: 100;
 }
 
-th {
+th,
+td,
+td > input {
     background-color: var(--theme-color);
-    color: white
+    color: white;
+    text-align: center;
+    font-weight: 400;
+    padding: 5px;
 }
   
 .brand-logo,
@@ -31,9 +36,9 @@ th {
     font-weight: bold;
 }
 
-.dropdown-content li>a,
-.dropdown-content li>span,
-.sidenav li>a,
+.dropdown-content li > a,
+.dropdown-content li > span,
+.sidenav li > a,
 .theme-color {
     color: var(--theme-color);
 }
@@ -68,6 +73,50 @@ nav {
     background-color: var(--theme-color);
 }
 
+.btn.tooltipped {
+    background-color: lightgrey;
+    color: darkgray;
+}
+
+.recipe-link {
+    color: inherit;
+    text-decoration: underline;
+    background: inherit;
+    box-shadow: none;
+    height: auto;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.modal-recipe-title {
+    border-bottom: white;
+    border-style: solid;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.recipe-link:hover {
+    background-color: var(--theme-color);
+}
+
+.modal-exit {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: x-large;
+}
+
+.hidden {
+    display: none;
+}
+
+.flashes {
+    margin-bottom: 1rem;
+}
+
 /* Code beginning here taken and adapted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp */
 
 #scroll-btn {
@@ -94,9 +143,12 @@ nav {
 
 /* Media queries begin here */
 
-/* @media screen and (min-width: 600px) {
+@media screen and (max-width: 992px) {
 
+    .modal {
+        width: 90%;
+    }
   
-} */
+}
 
 /* Media queries end here */

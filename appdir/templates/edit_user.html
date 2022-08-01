@@ -10,7 +10,7 @@
                 <div class="input-field col s12">
                     <i class="fa-solid fa-user prefix red-text text-darken-2"></i>
                     <input id="user_name" name="user_name" minlength="3" maxlength="20" type="text" class="validate"
-                    value="{{ user.user_name }}" required>
+                        value="{{ user.user_name }}" required {% if user.user_name == "admin" %} disabled {% endif %}>
                     <label for="user_name">Username</label>
                 </div>
             </div>
@@ -31,7 +31,7 @@
             <!-- submit button -->
             <div class="row">
                 <div class="col s12 center-align button-div">
-                    <button type="submit" class="btn-large green darken-2 text-shadow">
+                    <button type="submit" class="btn-large green darken-4 text-shadow">
                         Update User <i class="fas fa-plus-square right"></i>
                     </button>
                 </div>

@@ -15,42 +15,45 @@
 
     <div class="container center">
         <div class="col s12 center">
-            {% if users|length > 0 %}
-                <table class="highlight centered">
-                    <thead>
+            <table class="highlight centered">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Superuser Status</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
                         <tr>
-                            <th>User ID</th>
-                            <th>Username</th>
-                            <th>Superuser Status</th>
-                            <th>Options</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in users %}
-                            <tr>
-                                <td>{{ user.id }}</td>
-                                <td>{{ user.user_name }}</td>
-                                <td>
-                                    {% if user.is_superuser %}
-                                        <i class="fa-solid fa-check"></i>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.user_name }}</td>
+                            <td>
+                                {% if user.is_superuser %}
+                                    <i class="fa-solid fa-check"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-xmark"></i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="card-action">
+                                    {% if user.id == 1 %} <!-- If the user is the original admin superuser -->
+                                        <a class="btn tooltipped" data-position="top" data-tooltip="This user cannot be edited or deleted.">Edit</a>
+                                        <!-- Modal Trigger -->
+                                        <!-- <button data-target="modal_delete_{{ user.user_name.lower() }}" class="btn red darken-4 modal-trigger disabled">Delete</button> -->
+                                        <a class="btn tooltipped" data-position="top" data-tooltip="This user cannot be edited or deleted.">Delete</a>
                                     {% else %}
-                                        <i class="fa-solid fa-xmark"></i>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <div class="card-action">
-                                        <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn green">Edit</a>
+                                        <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn green darken-4">Edit</a>
                                         <!-- Modal Trigger -->
                                         <button data-target="modal_delete_{{ user.user_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <h3 class="theme-color center">No results found</h2>
-            {% endif %}
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         {% for user in users %}
             <!-- Modal Structure -->
@@ -58,7 +61,7 @@
                 <div class="modal-content red accent-4 white-text">
                     <h3>Warning!</h3>
                     <p>Deleting a user is an irreversible action.</p>
-                    <p>Upon deletion, this user's data will be permanently deleted, but their recipe(s) will remain on the database.</p>
+                    <p>Upon deletion, this user's data will be permanently deleted, including their recipes.</p>
                     <p>Are you sure you want to permanently delete the <strong>{{ user.user_name }}</strong> user?</p>
                 </div>
                 <div class="modal-footer-workaround row modal-fixed-footer">
@@ -67,7 +70,7 @@
                             class="modal-action btn red darken-4 white-text">DELETE USER</a>
                     </div>
                     <div class="col s6 center">
-                        <button class="modal-action modal-close btn green white-text">CANCEL</button>
+                        <button class="modal-action modal-close btn green darken-4 white-text">CANCEL</button>
                     </div>
                 </div>
             </div>

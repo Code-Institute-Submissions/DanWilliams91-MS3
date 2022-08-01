@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h2 class="page-title theme-color center">My Recipes</h2>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes container center">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <div class="row">
+        <div class="col s12 center-align">
+            <a href="{{ url_for('add_recipe') }}" class="btn-large red accent-4 text-shadow">
+                Add Recipe <i class="fas fa-plus-square right"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if user_recipes|length > 0 %}
+            {% for recipe in user_recipes %}
+                <div class="col s12 m4 l3">
+                    <div class="card red accent-5 text-shadow center-align">
+                        <div class="card-content white-text">
+                            <a data-target="modal_view_{{ recipe.recipe_name.lower() }}" class="btn card-title recipe-link modal-trigger">{{ recipe.recipe_name }}</a>
+                            <p>
+                                Category: 
+                                {% for category in categories %}
+                                    {% if category.id == recipe.category_id %}
+                                        {{ category.category_name }}
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" class="btn green darken-4">Edit</a>
+                            <!-- Modal Trigger -->
+                            <a data-target="modal_delete_{{ recipe.recipe_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</a>
+                        </div>
+                        <!-- Modal Structure -->
+                        <div id="modal_delete_{{ recipe.recipe_name.lower() }}" class="modal">
+                            <div class="modal-content red accent-4 white-text">
+                                <h3>Warning!</h3>
+                                <p>Deleting a recipe is permanent and the associated data will be irrecoverable.</p>
+                                <p>Are you sure you want to permanently delete the <strong>{{ recipe.recipe_name }}</strong> recipe?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col s6 center">
+                                    <a href="{{ url_for('delete_recipe', recipe_id=recipe.id) }}" class="modal-action btn red darken-4 white-text">DELETE RECIPE</a>
+                                </div>
+                                <div class="col s6 center">
+                                    <a class="modal-action modal-close btn green darken-4 white-text">CANCEL</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h3 class="theme-color center">No results found</h2>
+        {% endif %}
+    </div>
+
+{% endblock %}

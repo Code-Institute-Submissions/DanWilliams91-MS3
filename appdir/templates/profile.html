@@ -21,7 +21,7 @@
                     <p class="center">View and manage recipes you've added to the website.</p>
                 </div>
                 <div class="card-action center">
-                    <a href="#">Go to My Recipes</a>
+                    <a href="{{ url_for('my_recipes') }}">Go to My Recipes</a>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
                     <p class="center">Add a new recipe to the website.</p>
                 </div>
                 <div class="card-action center">
-                    <a href="#">Add Recipe</a>
+                    <a href="{{ url_for('add_recipe') }}">Add Recipe</a>
                 </div>
             </div>
         </div>
@@ -71,7 +71,7 @@
                         <p class="center">Manage the website's recipes.</p>
                     </div>
                     <div class="card-action center">
-                        <a href="#">Go to All Recipes</a>
+                        <a href="{{ url_for('get_recipes') }}">Go to All Recipes</a>
                     </div>
                 </div>
             </div>
