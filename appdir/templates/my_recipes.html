@@ -3,16 +3,6 @@
 
     <h2 class="page-title theme-color center">My Recipes</h2>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flashes container center">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-
     <div class="row">
         <div class="col s12 center-align">
             <a href="{{ url_for('add_recipe') }}" class="btn-large red accent-4 text-shadow">
@@ -38,7 +28,7 @@
                             </p>
                         </div>
                         <div class="card-action">
-                            <a href="#" class="btn green darken-4">Edit</a>
+                            <a href="{{ url_for('edit_recipe', recipe_id=recipe.id) }}" class="btn green darken-4">Edit</a>
                             <!-- Modal Trigger -->
                             <a data-target="modal_delete_{{ recipe.recipe_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</a>
                         </div>

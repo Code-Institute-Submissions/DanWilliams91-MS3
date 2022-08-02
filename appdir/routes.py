@@ -59,7 +59,7 @@ def profile(username):
 
 
 def check_user_level():
-    current_user = Users.query.filter(Users.user_name==session["user"])
+    current_user = Users.query.filter(Users.user_name == session["user"])
     return True if current_user[0].is_superuser else False        
 
 
@@ -109,7 +109,7 @@ def login():
 
 @app.route("/get_categories")
 def get_categories():
-    if check_user_level()==False:
+    if check_user_level() == False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))
@@ -119,7 +119,7 @@ def get_categories():
 
 @app.route("/add_category", methods=["GET", "POST"])
 def add_category():
-    if check_user_level()==False:
+    if check_user_level() == False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))
@@ -133,7 +133,7 @@ def add_category():
 
 @app.route("/edit_category/<int:category_id>", methods=["GET", "POST"])
 def edit_category(category_id):
-    if check_user_level()==False:
+    if check_user_level() == False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))    
@@ -147,7 +147,7 @@ def edit_category(category_id):
 
 @app.route("/delete_category/<int:category_id>")
 def delete_category(category_id):
-    if check_user_level()==False:
+    if check_user_level() == False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))
@@ -161,7 +161,7 @@ def delete_category(category_id):
 
 @app.route("/get_users")
 def get_users():
-    if check_user_level()==False:
+    if check_user_level() == False:
         flash("You must be a superuser to manage users!")
         return redirect(url_for(
             "profile", username=session["user"]))
@@ -171,7 +171,7 @@ def get_users():
 
 @app.route("/delete_user/<int:user_id>")
 def delete_user(user_id):
-    if check_user_level()==False:
+    if check_user_level() == False:
         flash("You must be a superuser to manage users!")
         return redirect(url_for(
             "profile", username=session["user"]))
@@ -184,7 +184,7 @@ def delete_user(user_id):
 
 @app.route("/edit_user/<int:user_id>", methods=["GET", "POST"])
 def edit_user(user_id):
-    if check_user_level()==False:
+    if check_user_level() == False:
         flash("You must be a superuser to manage users!")
         return redirect(url_for(
             "profile", username=session["user"]))
@@ -216,7 +216,7 @@ def my_recipes():
 
 @app.route("/get_recipes")
 def get_recipes():
-    if check_user_level()==False:
+    if check_user_level() == False:
         return redirect(url_for("my_recipes"))
     recipes = list(Name.query.order_by(Name.recipe_name).all())
     categories = list(Category.query.order_by(Category.id).all())
@@ -227,6 +227,7 @@ def get_recipes():
 
 @app.route("/add_recipe", methods=["GET", "POST"])
 def add_recipe():    
+    # check if user is logged in
     if "user" not in session:
         flash("You need to be logged in to add a recipe.")
         return redirect(url_for("login"))
@@ -258,8 +259,8 @@ def add_recipe():
 def delete_recipe(recipe_id):
     recipe = Name.query.get_or_404(recipe_id)
     mongo_recipe = list(mongo.db.recipes.find({"id": recipe.id}))[0]
-    if session["user"] not in mongo_recipe.values():
-        if check_user_level()==False:
+    if session["user"] != mongo_recipe["created_by"]:
+        if check_user_level() == False:
             flash("You can only delete your own recipes!")
             return redirect(url_for("get_recipes"))
     db.session.delete(recipe)
@@ -267,3 +268,31 @@ def delete_recipe(recipe_id):
     mongo.db.recipes.delete_one(mongo_recipe)
     flash("Recipe deleted successfully.")
     return redirect(url_for("get_recipes"))
+
+
+@app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
+def edit_recipe(recipe_id):
+    recipe = Name.query.get_or_404(recipe_id)
+    mongo_recipe = list(mongo.db.recipes.find({"id": recipe_id}))[0]
+    categories = list(Category.query.order_by(Category.category_name).all())
+    # if user doesn't own recipe
+    if session["user"] != mongo_recipe["created_by"]:
+        if check_user_level() == False:
+            flash("You can only edit your own recipes!")
+            return redirect(url_for("get_recipes"))
+    if request.method == "POST":
+        recipe.recipe_name = request.form.get("recipe_name"),
+        recipe.category_id = int(request.form.get("category_id"))
+        db.session.commit()
+        mongo_details = {
+            "id": recipe_id,
+            "ingredients": request.form.get("ingredients"),
+            "instructions": request.form.get("instructions"),
+            "created_by": mongo_recipe["created_by"]
+        }
+        mongo.db.recipes.update_one({"id": recipe_id}, {"$set": mongo_details})
+        flash("Recipe updated successfully")
+        return redirect(url_for("get_recipes"))
+    return render_template(
+        "edit_recipe.html", categories=categories, recipe=recipe,
+        mongo_recipe=mongo_recipe)

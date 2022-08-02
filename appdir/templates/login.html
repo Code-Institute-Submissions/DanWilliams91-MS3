@@ -11,16 +11,6 @@
         </p>
     </div>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flashes container center">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-
     <!-- 
     Login form begins here. Format adapted from 
     https://github.com/Code-Institute-Solutions/CombinedTaskManager2022/blob/main/taskmanager/templates/register.html 

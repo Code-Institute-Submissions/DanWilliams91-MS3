@@ -69,6 +69,17 @@
 
     <!-- Main Content Section Start -->
     <main>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes container center">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
         {% block content %}
         {% endblock %}
         <button id="scroll-btn" title="Go to top"><i class="fa-solid fa-circle-chevron-up"></i></button>

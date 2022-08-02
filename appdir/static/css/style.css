@@ -19,16 +19,6 @@ nav {
     position: fixed;
     z-index: 100;
 }
-
-th,
-td,
-td > input {
-    background-color: var(--theme-color);
-    color: white;
-    text-align: center;
-    font-weight: 400;
-    padding: 5px;
-}
   
 .brand-logo,
 .page-title {

@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h2 class="page-title theme-color center">Add Recipe</h2>
+    <h2 class="page-title theme-color center">Edit Recipe: {{ recipe.recipe_name }}</h2>
 
     <div id="page-content" class="row card-panel grey lighten-5">
-        <form class="col s12" method="POST" action="{{ url_for('add_recipe') }}">
+        <form class="col s12" method="POST" action="{{ url_for('edit_recipe', categories=categories, recipe_id=recipe.id,
+        mongo_recipe=mongo_recipe) }}">
             <!-- recipe name -->
             <div class="row">
                 <div class="input-field col s12">
                     <i class="fa-solid fa-pencil prefix red-text text-darken-2"></i>
                     <input id="recipe_name" name="recipe_name" minlength="3" maxlength="100" type="text" class="validate"
-                        required>
+                        value="{{ recipe.recipe_name }}" required>
                     <label for="recipe_name">Recipe Name</label>
                 </div>
             </div>
@@ -21,7 +22,11 @@
                     <select id="category_id" name="category_id" class="validate" required>
                         <option value="" disabled selected>Choose Category</option>
                         {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.category_name }}</option>
+                            {% if category.id == recipe.category_id | int %}
+                                <option value="{{ category.id }}" selected>{{ category.category_name }}</option>
+                            {% else %}
+                                <option value="{{ category.id }}">{{ category.category_name }}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>
@@ -30,7 +35,8 @@
             <div class="row">
                 <div class="input-field col s12">
                     <i class="fa-solid fa-list-ul prefix red-text text-darken-2"></i>
-                    <textarea id="ingredients" name="ingredients" class="materialize-textarea validate" placeholder="Enter recipe ingredients and quantities here." required></textarea>
+                    <textarea id="ingredients" name="ingredients" class="materialize-textarea validate" placeholder="Enter recipe ingredients and quantities here." 
+                        required>{{ mongo_recipe.ingredients }}</textarea>
                     <label for="ingredients">Ingredients</label>
                 </div>
             </div>
@@ -38,7 +44,8 @@
             <div class="row">
                 <div class="input-field col s12">
                     <i class="fa-solid fa-list-ol prefix red-text text-darken-2"></i>
-                    <textarea id="instructions" name="instructions" class="materialize-textarea validate" placeholder="Enter recipe instructions in numerical order here." required></textarea>                    
+                    <textarea id="instructions" name="instructions" class="materialize-textarea validate" placeholder="Enter recipe instructions in numerical order here." 
+                        required>{{ mongo_recipe.instructions }}</textarea>                    
                     <label for="instructions">Recipe Instructions</label>
                 </div>
             </div>
@@ -46,7 +53,7 @@
             <div class="row">
                 <div class="col s12 center-align button-div">
                     <button type="submit" class="btn-large green darken-4 text-shadow">
-                        Add Recipe <i class="fas fa-plus-square right"></i>
+                        Update Recipe <i class="fas fa-plus-square right"></i>
                     </button>
                 </div>
             </div>

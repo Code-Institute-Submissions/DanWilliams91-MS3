@@ -23,6 +23,6 @@ else:
 
 db = SQLAlchemy(app)
 mongo = PyMongo(app)
-migrate = Migrate(app, db)
+migrate = Migrate(app, db, compare_type=True)
 
 from appdir import routes  # noqa
