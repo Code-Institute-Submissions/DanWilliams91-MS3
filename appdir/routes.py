@@ -109,12 +109,32 @@ def login():
 
 @app.route("/get_categories")
 def get_categories():
+    categories = list(Category.query.order_by(Category.id).all())
+    recipes = list(Name.query.order_by(Name.recipe_name).all())
+    return render_template("categories.html", categories=categories, recipes=recipes)
+
+
+@app.route("/view_category/<int:category_id>")
+def view_category(category_id):
+    category = Category.query.get_or_404(category_id)
+    all_recipes = list(Name.query.order_by(Name.recipe_name).all())
+    recipes = []
+    mongo_recipes = []
+    for recipe in all_recipes:
+        if recipe.category_id == category_id:
+            recipes.append(recipe)
+            mongo_recipes.append(list(mongo.db.recipes.find({"id": recipe.id}))[0])
+    return render_template("category.html", category=category, recipes=recipes, mongo_recipes=mongo_recipes)
+
+
+@app.route("/manage_categories")
+def manage_categories():
     if check_user_level() == False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))
     categories = list(Category.query.order_by(Category.id).all())
-    return render_template("categories.html", categories=categories)
+    return render_template("manage_categories.html", categories=categories)
 
 
 @app.route("/add_category", methods=["GET", "POST"])
@@ -127,7 +147,7 @@ def add_category():
         category = Category(category_name=request.form.get("category_name"))
         db.session.add(category)
         db.session.commit()
-        return redirect(url_for("get_categories"))
+        return redirect(url_for("manage_categories"))
     return render_template("add_category.html")
 
 
@@ -141,7 +161,7 @@ def edit_category(category_id):
     if request.method == "POST":
         category.category_name = request.form.get("category_name")
         db.session.commit()
-        return redirect(url_for("get_categories"))
+        return redirect(url_for("manage_categories"))
     return render_template("edit_category.html", category=category)
 
 
@@ -156,7 +176,7 @@ def delete_category(category_id):
     db.session.commit()
     mongo.db.tasks.delete_many({"category_id": str(category_id)})
     flash("Category deleted successfully.")
-    return redirect(url_for("get_categories"))
+    return redirect(url_for("manage_categories"))
 
 
 @app.route("/get_users")
@@ -214,15 +234,15 @@ def my_recipes():
         "my_recipes.html", user_recipes=user_recipes, categories=categories)
 
 
-@app.route("/get_recipes")
-def get_recipes():
+@app.route("/manage_recipes")
+def manage_recipes():
     if check_user_level() == False:
         return redirect(url_for("my_recipes"))
     recipes = list(Name.query.order_by(Name.recipe_name).all())
     categories = list(Category.query.order_by(Category.id).all())
     mongo_recipes = list(mongo.db.recipes.find())
     return render_template(
-        "get_recipes.html", mongo_recipes=mongo_recipes, recipes=recipes, categories=categories)
+        "manage_recipes.html", mongo_recipes=mongo_recipes, recipes=recipes, categories=categories)
 
 
 @app.route("/add_recipe", methods=["GET", "POST"])
@@ -262,12 +282,12 @@ def delete_recipe(recipe_id):
     if session["user"] != mongo_recipe["created_by"]:
         if check_user_level() == False:
             flash("You can only delete your own recipes!")
-            return redirect(url_for("get_recipes"))
+            return redirect(url_for("my_recipes"))
     db.session.delete(recipe)
     db.session.commit()
     mongo.db.recipes.delete_one(mongo_recipe)
     flash("Recipe deleted successfully.")
-    return redirect(url_for("get_recipes"))
+    return redirect(url_for("manage_recipes"))
 
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
@@ -279,7 +299,7 @@ def edit_recipe(recipe_id):
     if session["user"] != mongo_recipe["created_by"]:
         if check_user_level() == False:
             flash("You can only edit your own recipes!")
-            return redirect(url_for("get_recipes"))
+            return redirect(url_for("my_recipes"))
     if request.method == "POST":
         recipe.recipe_name = request.form.get("recipe_name"),
         recipe.category_id = int(request.form.get("category_id"))
@@ -292,7 +312,7 @@ def edit_recipe(recipe_id):
         }
         mongo.db.recipes.update_one({"id": recipe_id}, {"$set": mongo_details})
         flash("Recipe updated successfully")
-        return redirect(url_for("get_recipes"))
+        return redirect(url_for("my_recipes"))
     return render_template(
         "edit_recipe.html", categories=categories, recipe=recipe,
         mongo_recipe=mongo_recipe)

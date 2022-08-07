@@ -4,7 +4,7 @@
     <h2 class="page-title theme-color center">{{ username }}'s Profile Options</h2>
 
     <div class="row">
-        <div class="col s12 m6 l3">
+        <div class="col s12 m6 l4">
             <div class="card red darken-1">
                 <div class="card-content white-text">
                     <span class="card-title center">My Recipes</span>
@@ -15,18 +15,7 @@
                 </div>
             </div>
         </div>
-        <div class="col s12 m6 l3">
-            <div class="card red darken-1">
-                <div class="card-content white-text">
-                    <span class="card-title center">My Favourites</span>
-                    <p class="center">View and manage recipes you've added to your Favourites.</p>
-                </div>
-                <div class="card-action center">
-                    <a href="#">Go to My Favourites</a>
-                </div>
-            </div>
-        </div>
-        <div class="col s12 m6 l3">
+        <div class="col s12 m6 l4">
             <div class="card red darken-1">
                 <div class="card-content white-text">
                     <span class="card-title center">Add Recipe</span>
@@ -37,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="col s12 m6 l3">
+        <div class="col s12 m6 l4">
             <div class="card red darken-1">
                 <div class="card-content white-text">
                     <span class="card-title center">Log Out</span>
@@ -61,7 +50,7 @@
                         <p class="center">Manage the website's recipes.</p>
                     </div>
                     <div class="card-action center">
-                        <a href="{{ url_for('get_recipes') }}">Go to All Recipes</a>
+                        <a href="{{ url_for('manage_recipes') }}">Go to All Recipes</a>
                     </div>
                 </div>
             </div>
@@ -72,7 +61,7 @@
                         <p class="center">Manager the website's recipe categories.</p>
                     </div>
                     <div class="card-action center">
-                        <a href="{{ url_for('get_categories') }}">Go to All Categories</a>
+                        <a href="{{ url_for('manage_categories') }}">Go to All Categories</a>
                     </div>
                 </div>
             </div>

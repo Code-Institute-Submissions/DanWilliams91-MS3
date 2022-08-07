@@ -107,6 +107,20 @@ nav {
     margin-bottom: 1rem;
 }
 
+.recipe-modal {
+    width: 95%;
+    max-height: 78vh;
+}
+
+.recipe-modal .ingredients-content {
+    margin-bottom: 1rem;
+}
+
+/* Overruling Materialize's default margins */
+.card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
+    margin-right: 0;
+}
+
 /* Code beginning here taken and adapted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp */
 
 #scroll-btn {

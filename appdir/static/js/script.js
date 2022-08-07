@@ -104,6 +104,11 @@ $(document).ready(function () {
     })
 
 
+    $(".btn-cancel").on("click", function() {
+        window.history.back()
+    })
+
+
     /** */
     // $("#add-ingredient-row").on("click", function() {
     //     addIngredientRow()
