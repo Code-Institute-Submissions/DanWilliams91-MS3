@@ -17,15 +17,30 @@
                 <div class="col s12 m4 l3">
                     <div class="card red accent-5 text-shadow center-align">
                         <div class="card-content white-text">
-                            <span class="card-title">{{ category.category_name }}</span>
+                            <a href="{{ url_for('view_category', category_id=category.id) }}" class="card-title text-link">{{ category.category_name }}</a>
+                            <p>
+                                {% set listLength = namespace(n = 0) %}
+                                {% for recipe in recipes %}
+                                    {% if recipe.category_id == category.id %}
+                                        {% set listLength.n = listLength.n + 1 %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if listLength.n == 1 %}
+                                    Contains {{ listLength.n }} Recipe
+                                {% elif listLength.n == 0 %}
+                                    Contains No Recipes
+                                {% else %}
+                                    Contains {{ listLength.n }} Recipes
+                                {% endif %}
+                            </p>
                         </div>
                         <div class="card-action">
                             <a href="{{ url_for('edit_category', category_id=category.id) }}" class="btn green darken-4">Edit</a>
                             <!-- Modal Trigger -->
-                            <button data-target="modal_delete_{{ category.category_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</button>
+                            <button data-target="modal-delete-{{ category.category_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</button>
                         </div>
                         <!-- Modal Structure -->
-                        <div id="modal_delete_{{ category.category_name.lower() }}" class="modal">
+                        <div id="modal-delete-{{ category.category_name.lower() }}" class="modal">
                             <div class="modal-content red accent-4 white-text">
                                 <h3>Warning!</h3>
                                 <p>Deleting a category will also delete all recipes which are assigned to the category.</p>

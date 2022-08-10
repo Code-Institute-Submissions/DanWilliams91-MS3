@@ -3,21 +3,13 @@
 
     <h2 class="page-title theme-color center">Manage Recipes</h2>
 
-    <div class="row">
-        <div class="col s12 center-align">
-            <a href="{{ url_for('add_recipe') }}" class="btn-large red accent-4 text-shadow">
-                Add Recipe <i class="fas fa-plus-square right"></i>
-            </a>
-        </div>
-    </div>
-
-    <div class="row">
+    <div class="row center-align">
         {% if recipes|length > 0 %}
             {% for recipe in recipes %}
                 <div class="col s12 m4 l3">
                     <div class="card red accent-5 text-shadow center-align">
                         <div class="card-content white-text">
-                            <a data-target="modal_view_{{ recipe.recipe_name.lower() }}" class="btn card-title recipe-link modal-trigger">{{ recipe.recipe_name }}</a>
+                            <a data-target="modal-view-{{ recipe.recipe_name.lower() }}" class="btn card-title text-link modal-trigger">{{ recipe.recipe_name }}</a>
                             <p>
                                 Category: 
                                 {% for category in categories %}
@@ -38,10 +30,10 @@
                         <div class="card-action">
                             <a href="{{ url_for('edit_recipe', recipe_id=recipe.id) }}" class="btn green darken-4">Edit</a>
                             <!-- Modal Trigger -->
-                            <a data-target="modal_delete_{{ recipe.recipe_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</a>
+                            <a data-target="modal-delete-{{ recipe.recipe_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</a>
                         </div>
                         <!-- Modal Structure -->
-                        <div id="modal_delete_{{ recipe.recipe_name.lower() }}" class="modal">
+                        <div id="modal-delete-{{ recipe.recipe_name.lower() }}" class="modal">
                             <div class="modal-content red accent-4 white-text">
                                 <h3>Warning!</h3>
                                 <p>Deleting a recipe is permanent and the associated data will be irrecoverable.</p>
@@ -56,19 +48,37 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="modal_view_{{ recipe.recipe_name.lower() }}" class="modal">
+                        <div id="modal-view-{{ recipe.recipe_name.lower() }}" class="modal recipe-modal">
                             <div class="modal-content red accent-4 white-text">
                                 <i class="fa-solid fa-circle-xmark modal-exit modal-close"></i>
                                 <h3 class="modal-recipe-title">{{ recipe.recipe_name }}</h3>
+                                <h4>Category: {{ recipe.category }}</h4>
                                 <div class="row">
-                                    <div class="col s12 m4">
+                                    <div class="col s12 m6 ingredients-content">
                                         <h5>Ingredients</h5>
-                                        <p>Unordered list of ingredients</p>
+                                        <p>
+                                            {% for mongo_recipe in mongo_recipes %}
+                                                {% if mongo_recipe.id == recipe.id %}
+                                                    {{ mongo_recipe.ingredients }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </p>
                                     </div>
-                                    <div class="col s12 m8">
+                                    <div class="col s12 m6">
                                         <h5>Instructions</h5>
-                                        <p>Ordered list of instructions</p>
+                                        <p>
+                                            {% for mongo_recipe in mongo_recipes %}
+                                                {% if mongo_recipe.id == recipe.id %}
+                                                    {{ mongo_recipe.instructions }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </p>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col s12 center">
+                                    <button class="modal-action modal-close btn green darken-4 white-text">Close</button>
                                 </div>
                             </div>
                         </div>

@@ -4,6 +4,7 @@ $(document).ready(function () {
     $('.modal').modal();
     $('select').formSelect();
     $('.tooltipped').tooltip({enterDelay: 300});
+    $("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: "absolute"});
     checkScreenSize();
     });
 

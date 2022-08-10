@@ -31,12 +31,11 @@
                                     {% if user.id == 1 %} <!-- If the user is the original admin superuser -->
                                         <a class="btn tooltipped" data-position="top" data-tooltip="This user cannot be edited or deleted.">Edit</a>
                                         <!-- Modal Trigger -->
-                                        <!-- <button data-target="modal_delete_{{ user.user_name.lower() }}" class="btn red darken-4 modal-trigger disabled">Delete</button> -->
                                         <a class="btn tooltipped" data-position="top" data-tooltip="This user cannot be edited or deleted.">Delete</a>
                                     {% else %}
                                         <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn green darken-4">Edit</a>
                                         <!-- Modal Trigger -->
-                                        <button data-target="modal_delete_{{ user.user_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</button>
+                                        <button data-target="modal-delete-{{ user.user_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</button>
                                     {% endif %}
                                 </div>
                             </td>
@@ -47,16 +46,16 @@
         </div>
         {% for user in users %}
             <!-- Modal Structure -->
-            <div id="modal_delete_{{ user.user_name.lower() }}" class="modal">
+            <div id="modal-delete-{{ user.user_name.lower() }}" class="modal">
                 <div class="modal-content red accent-4 white-text">
                     <h3>Warning!</h3>
                     <p>Deleting a user is an irreversible action.</p>
-                    <p>Upon deletion, this user's data will be permanently deleted, including their recipes.</p>
+                    <p>Upon deletion, this user will be permanently deleted, but their recipes will remain on the database.</p>
                     <p>Are you sure you want to permanently delete the <strong>{{ user.user_name }}</strong> user?</p>
                 </div>
                 <div class="modal-footer-workaround row modal-fixed-footer">
                     <div class="col s6 center">
-                        <a href="{{ url_for('edit_user', user_id=user.id) }}"
+                        <a href="{{ url_for('delete_user', user_id=user.id) }}"
                             class="modal-action btn red darken-4 white-text">DELETE USER</a>
                     </div>
                     <div class="col s6 center">

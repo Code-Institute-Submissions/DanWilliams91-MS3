@@ -5,6 +5,11 @@ from appdir import app, db, mongo
 from appdir.models import Name, Category, Users
 
 
+def check_user_level():
+    current_user = Users.query.filter(Users.user_name == session["user"])
+    return True if current_user[0].is_superuser else False    
+
+
 @app.route("/")
 @app.route("/home")
 def home():
@@ -13,30 +18,25 @@ def home():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-
     if request.method == "POST":
-        
         # check if username already exists in db
         existing_user = Users.query.filter(
             Users.user_name == request.form.get("username").lower()).all()
-
         if existing_user:
             flash("Username already exists. Please try another username or \
                 log in if you already have an account.")
             return redirect(url_for("register"))
-
         user = Users(
             user_name=request.form.get("username").lower(),
             password=generate_password_hash(request.form.get("password"))
         )
-        
         db.session.add(user)
         db.session.commit()
-        session["user"] = request.form.get("username").lower() # put the new user into 'session' cookie
+        # put the new user into 'session' cookie
+        session["user"] = request.form.get("username").lower()
         flash("Registration successful! Welcome, {}.".format(
             request.form.get("username")))
         return redirect(url_for("profile", username=session["user"]))
-
     if "user" in session:
         flash(
             "A user is already logged in - \
@@ -48,19 +48,12 @@ def register():
 
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
-        
     if "user" in session:
         return render_template(
             "profile.html",
             username=session["user"],
             is_superuser=check_user_level())
-
-    return redirect(url_for("login"))
-
-
-def check_user_level():
-    current_user = Users.query.filter(Users.user_name == session["user"])
-    return True if current_user[0].is_superuser else False        
+    return redirect(url_for("login"))   
 
 
 @app.route("/logout")
@@ -73,29 +66,26 @@ def logout():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-
     if request.method == "POST":
         # check if username exists in db
         existing_user = Users.query.filter(
             Users.user_name == request.form.get("username").lower()).all()
-
         if existing_user:
             # ensure hashed password matches user input
             if check_password_hash(
-                    existing_user[0].password, request.form.get("password")):
-                        session["user"] = request.form.get("username").lower()
-                        flash("Login successful. Welcome back, {}!".format(
-                            request.form.get("username")))
-                        return redirect(url_for(
-                            "profile", username=session["user"]))
+                existing_user[0].password, request.form.get("password")):
+                session["user"] = request.form.get("username").lower()
+                flash("Login successful. Welcome back, {}!".format(
+                    request.form.get("username")))
+                return redirect(url_for(
+                    "profile", username=session["user"]))
             else:
                 # invalid password match
-                flash("Incorrect Username and/or Password")
+                flash("Incorrect Username and/or Password.")
                 return redirect(url_for("login"))
-
         else:
             # username doesn't exist
-            flash("Incorrect Username and/or Password")
+            flash("Incorrect Username and/or Password.")
             return redirect(url_for("login"))
 
     if "user" in session:
@@ -111,7 +101,18 @@ def login():
 def get_categories():
     categories = list(Category.query.order_by(Category.id).all())
     recipes = list(Name.query.order_by(Name.recipe_name).all())
-    return render_template("categories.html", categories=categories, recipes=recipes)
+    return render_template(
+        "categories.html", categories=categories, recipes=recipes)
+
+
+@app.route("/get_recipes")
+def get_recipes():
+    categories = list(Category.query.order_by(Category.id).all())
+    recipes = list(Name.query.order_by(Name.recipe_name).all())
+    mongo_recipes = list(mongo.db.recipes.find())
+    return render_template(
+        "recipes.html", categories=categories, recipes=recipes,
+        mongo_recipes=mongo_recipes)
 
 
 @app.route("/view_category/<int:category_id>")
@@ -123,23 +124,27 @@ def view_category(category_id):
     for recipe in all_recipes:
         if recipe.category_id == category_id:
             recipes.append(recipe)
-            mongo_recipes.append(list(mongo.db.recipes.find({"id": recipe.id}))[0])
-    return render_template("category.html", category=category, recipes=recipes, mongo_recipes=mongo_recipes)
+            mongo_recipes.append(
+                list(mongo.db.recipes.find({"id": recipe.id}))[0])
+    return render_template(
+        "category.html", category=category, recipes=recipes,
+        mongo_recipes=mongo_recipes)
 
 
 @app.route("/manage_categories")
 def manage_categories():
-    if check_user_level() == False:
+    if check_user_level() is False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))
     categories = list(Category.query.order_by(Category.id).all())
-    return render_template("manage_categories.html", categories=categories)
+    recipes = list(Name.query.order_by(Name.recipe_name).all())
+    return render_template("manage_categories.html", categories=categories, recipes=recipes)
 
 
 @app.route("/add_category", methods=["GET", "POST"])
 def add_category():
-    if check_user_level() == False:
+    if check_user_level() is False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))
@@ -153,7 +158,7 @@ def add_category():
 
 @app.route("/edit_category/<int:category_id>", methods=["GET", "POST"])
 def edit_category(category_id):
-    if check_user_level() == False:
+    if check_user_level() is False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))    
@@ -167,7 +172,7 @@ def edit_category(category_id):
 
 @app.route("/delete_category/<int:category_id>")
 def delete_category(category_id):
-    if check_user_level() == False:
+    if check_user_level() is False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
             "profile", username=session["user"]))
@@ -181,7 +186,7 @@ def delete_category(category_id):
 
 @app.route("/get_users")
 def get_users():
-    if check_user_level() == False:
+    if check_user_level() is False:
         flash("You must be a superuser to manage users!")
         return redirect(url_for(
             "profile", username=session["user"]))
@@ -191,7 +196,7 @@ def get_users():
 
 @app.route("/delete_user/<int:user_id>")
 def delete_user(user_id):
-    if check_user_level() == False:
+    if check_user_level() is False:
         flash("You must be a superuser to manage users!")
         return redirect(url_for(
             "profile", username=session["user"]))
@@ -204,7 +209,7 @@ def delete_user(user_id):
 
 @app.route("/edit_user/<int:user_id>", methods=["GET", "POST"])
 def edit_user(user_id):
-    if check_user_level() == False:
+    if check_user_level() is False:
         flash("You must be a superuser to manage users!")
         return redirect(url_for(
             "profile", username=session["user"]))
@@ -223,7 +228,9 @@ def edit_user(user_id):
 @app.route("/my_recipes")
 def my_recipes():
     recipes = list(Name.query.order_by(Name.recipe_name).all())
-    owner_recipes = list(mongo.db.recipes.find({"created_by": session["user"]}))
+    mongo_recipes = list(mongo.db.recipes.find())
+    owner_recipes = list(
+        mongo.db.recipes.find({"created_by": session["user"]}))
     user_recipes = []
     for recipe in recipes:
         for owned_recipe in owner_recipes:
@@ -231,18 +238,20 @@ def my_recipes():
                 user_recipes.append(recipe)
     categories = list(Category.query.order_by(Category.id).all())
     return render_template(
-        "my_recipes.html", user_recipes=user_recipes, categories=categories)
+        "my_recipes.html", user_recipes=user_recipes, categories=categories,
+        mongo_recipes=mongo_recipes)
 
 
 @app.route("/manage_recipes")
 def manage_recipes():
-    if check_user_level() == False:
+    if check_user_level() is False:
         return redirect(url_for("my_recipes"))
     recipes = list(Name.query.order_by(Name.recipe_name).all())
     categories = list(Category.query.order_by(Category.id).all())
     mongo_recipes = list(mongo.db.recipes.find())
     return render_template(
-        "manage_recipes.html", mongo_recipes=mongo_recipes, recipes=recipes, categories=categories)
+        "manage_recipes.html", mongo_recipes=mongo_recipes, recipes=recipes,
+        categories=categories)
 
 
 @app.route("/add_recipe", methods=["GET", "POST"])
@@ -269,7 +278,7 @@ def add_recipe():
         db.session.add(recipe_main)
         db.session.commit()
         mongo.db.recipes.insert_one(recipe_details)
-        flash("Recipe saved")
+        flash("Recipe saved.")
         return redirect(url_for("my_recipes"))
     categories = list(Category.query.order_by(Category.category_name).all())
     return render_template("add_recipe.html", categories=categories)
@@ -280,7 +289,7 @@ def delete_recipe(recipe_id):
     recipe = Name.query.get_or_404(recipe_id)
     mongo_recipe = list(mongo.db.recipes.find({"id": recipe.id}))[0]
     if session["user"] != mongo_recipe["created_by"]:
-        if check_user_level() == False:
+        if check_user_level() is False:
             flash("You can only delete your own recipes!")
             return redirect(url_for("my_recipes"))
     db.session.delete(recipe)
@@ -297,7 +306,7 @@ def edit_recipe(recipe_id):
     categories = list(Category.query.order_by(Category.category_name).all())
     # if user doesn't own recipe
     if session["user"] != mongo_recipe["created_by"]:
-        if check_user_level() == False:
+        if check_user_level() is False:
             flash("You can only edit your own recipes!")
             return redirect(url_for("my_recipes"))
     if request.method == "POST":
@@ -310,8 +319,9 @@ def edit_recipe(recipe_id):
             "instructions": request.form.get("instructions"),
             "created_by": mongo_recipe["created_by"]
         }
-        mongo.db.recipes.update_one({"id": recipe_id}, {"$set": mongo_details})
-        flash("Recipe updated successfully")
+        mongo.db.recipes.update_one(
+            {"id": recipe_id}, {"$set": mongo_details})
+        flash("Recipe updated successfully.")
         return redirect(url_for("my_recipes"))
     return render_template(
         "edit_recipe.html", categories=categories, recipe=recipe,
