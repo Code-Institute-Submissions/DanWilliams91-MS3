@@ -14,6 +14,21 @@
                     <label for="category_name">Category Name</label>
                 </div>
             </div>
+            <!-- category image -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="fas fa-image prefix red-text text-darken-2"></i>
+                    <input id="category_img" name="category_img" minlength="3" maxlength="25" type="text" class="validate"
+                    value="{{ category.category_img }}" required>
+                    <label for="category_img">Category Image Name (including file extension such as .jpg/.png, etc.)</label>
+                </div>
+            </div>
+            <!-- category image notice-->
+            <div class="row">
+                <div class="col s12 center-align button-div">
+                    <p class="notice"><strong>IMPORTANT:</strong> Please remember to save the image in the default directory (../static/images/)!</p>
+                </div>
+            </div>
             <!-- submit button -->
             <div class="row">
                 <div class="col s12 center-align button-div">

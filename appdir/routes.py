@@ -3,6 +3,9 @@ from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 from appdir import app, db, mongo
 from appdir.models import Name, Category, Users
+import string
+
+a_z = string.ascii_uppercase
 
 
 def check_user_level():
@@ -112,7 +115,23 @@ def get_recipes():
     mongo_recipes = list(mongo.db.recipes.find())
     return render_template(
         "recipes.html", categories=categories, recipes=recipes,
-        mongo_recipes=mongo_recipes)
+        mongo_recipes=mongo_recipes, a_z=a_z)
+
+
+@app.route("/get_recipes_filter/<filter>")
+def get_recipes_filter(filter):
+    categories = list(Category.query.order_by(Category.id).all())
+    all_recipes = list(Name.query.order_by(Name.recipe_name).all())
+    recipes = []
+    for recipe in all_recipes:
+        if recipe.recipe_name.startswith(filter) \
+        or recipe.recipe_name.startswith(filter.lower()):
+            recipes.append(recipe)
+    mongo_recipes = list(mongo.db.recipes.find())
+    letter_filter = filter
+    return render_template(
+        "recipes.html", categories=categories, recipes=recipes,
+        mongo_recipes=mongo_recipes, a_z=a_z, letter_filter=letter_filter)
 
 
 @app.route("/view_category/<int:category_id>")
@@ -149,7 +168,10 @@ def add_category():
         return redirect(url_for(
             "profile", username=session["user"]))
     if request.method == "POST":
-        category = Category(category_name=request.form.get("category_name"))
+        category = Category(
+            category_name=request.form.get("category_name"),
+            category_img=request.form.get("category_img")
+            )
         db.session.add(category)
         db.session.commit()
         return redirect(url_for("manage_categories"))
@@ -165,6 +187,7 @@ def edit_category(category_id):
     category = Category.query.get_or_404(category_id)
     if request.method == "POST":
         category.category_name = request.form.get("category_name")
+        category.category_img=request.form.get("category_img")
         db.session.commit()
         return redirect(url_for("manage_categories"))
     return render_template("edit_category.html", category=category)
@@ -263,7 +286,8 @@ def add_recipe():
     if request.method == "POST":
         recipe_main = Name(
             recipe_name=request.form.get("recipe_name"),
-            category_id=int(request.form.get("category_id"))
+            category_id=int(request.form.get("category_id")),
+            img_url=request.form.get("img_url")
         )
         db.session.add(recipe_main)
         db.session.commit()
@@ -271,12 +295,10 @@ def add_recipe():
             Name.recipe_name == request.form.get("recipe_name"))
         recipe_details = {
             "id": new_recipe[0].id,
-            "ingredients": request.form.get("ingredients"),
-            "instructions": request.form.get("instructions"),
+            "ingredients": request.form.get("ingredients").splitlines(),
+            "instructions": request.form.get("instructions").splitlines(),
             "created_by": session["user"]
         }
-        db.session.add(recipe_main)
-        db.session.commit()
         mongo.db.recipes.insert_one(recipe_details)
         flash("Recipe saved.")
         return redirect(url_for("my_recipes"))
@@ -311,12 +333,13 @@ def edit_recipe(recipe_id):
             return redirect(url_for("my_recipes"))
     if request.method == "POST":
         recipe.recipe_name = request.form.get("recipe_name"),
-        recipe.category_id = int(request.form.get("category_id"))
+        recipe.category_id = int(request.form.get("category_id")),
+        recipe.img_url = request.form.get("img_url")
         db.session.commit()
         mongo_details = {
             "id": recipe_id,
-            "ingredients": request.form.get("ingredients"),
-            "instructions": request.form.get("instructions"),
+            "ingredients": request.form.get("ingredients").splitlines(),
+            "instructions": request.form.get("instructions").splitlines(),
             "created_by": mongo_recipe["created_by"]
         }
         mongo.db.recipes.update_one(

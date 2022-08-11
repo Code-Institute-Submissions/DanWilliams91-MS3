@@ -4,6 +4,7 @@ from appdir import db
 class Name(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     recipe_name = db.Column(db.String(100), unique=True, nullable=False)
+    img_url = db.Column(db.String())
     category_id = db.Column(db.Integer, db.ForeignKey(
         "category.id", ondelete="CASCADE"), nullable=False)
 
@@ -16,6 +17,7 @@ class Name(db.Model):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category_name = db.Column(db.String(25), unique=True, nullable=False)
+    category_img = db.Column(db.String())
     recipes = db.relationship(
         "Name", backref="category", cascade="all, delete", lazy=True)
 

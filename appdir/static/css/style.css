@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 
 :root {
-    --theme-color: #d50101;
+    --theme-color: rgb(213, 1, 1);
 }
 
 body {
@@ -118,9 +118,33 @@ nav {
     margin-bottom: 1rem;
 }
 
-/* Overruling Materialize's default margins */
+.notice {
+    font-size: x-large;
+    background-color: yellow;
+    color: var(--theme-color);
+    padding: 0.5em;
+}
+
+/* Overruling Materialize's default layouts */
 .card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
     margin-right: 0;
+}
+
+.card .card-content,
+.card .card-action {
+    padding: 0.5rem;
+}
+
+.card .card-image {
+    overflow: hidden;
+    background-position: center;
+    background-size: cover;
+    height: 300px;
+}
+
+.pagination li a {
+    position: relative;
+    bottom: 5px;
 }
 
 /* Code beginning here taken and adapted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp */
@@ -148,6 +172,22 @@ nav {
 /* Code ending here taken and adapted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp */
 
 /* Media queries begin here */
+
+@media screen and (max-width: 600px) {
+
+    textarea.materialize-textarea {
+        height: 63px;
+    }
+  
+}
+
+@media screen and (min-width: 601px) and (max-width: 991px) {
+
+    /* .card .card-image {
+        height: hidden;
+    } */
+  
+}
 
 @media screen and (max-width: 992px) {
 

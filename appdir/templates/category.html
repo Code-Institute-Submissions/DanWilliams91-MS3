@@ -8,6 +8,14 @@
             {% for recipe in recipes %}
                 <div class="col s12 m6 l3">
                     <div class="card red accent-5 text-shadow center-align">
+                        <div class="card-image" style="background-image: url(
+                            {% if recipe.img_url != '' %}
+                                {{ recipe.img_url }}
+                            {% else %}
+                                ../static/images/img-empty.png
+                            {% endif %}
+                            );">
+                        </div>
                         <div class="card-content white-text">
                             <!-- Modal Trigger -->
                             <a href="#recipe-modal-{{ recipe.id }}" class="card-title modal-trigger text-link">{{ recipe.recipe_name }}</a>
@@ -29,7 +37,9 @@
                                 <h5>Ingredients</h5>
                                 {% for mongo_recipe in mongo_recipes %}
                                     {% if mongo_recipe.id == recipe.id %}
-                                        {{ mongo_recipe.ingredients }}
+                                        {%- for ingredient in mongo_recipe.ingredients -%}
+                                            <ul>{{- ingredient }}</ul>
+                                        {%- endfor -%}
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -37,7 +47,9 @@
                                 <h5>Instructions</h5>
                                 {% for mongo_recipe in mongo_recipes %}
                                     {% if mongo_recipe.id == recipe.id %}
-                                        {{ mongo_recipe.instructions }}
+                                        {%- for instruction in mongo_recipe.instructions -%}
+                                            <ul>{{- instruction }}</ul>
+                                        {%- endfor -%}
                                     {% endif %}
                                 {% endfor %}
                             </div>

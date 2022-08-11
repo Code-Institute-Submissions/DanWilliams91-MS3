@@ -35,8 +35,16 @@
             <div class="row">
                 <div class="input-field col s12">
                     <i class="fa-solid fa-list-ul prefix red-text text-darken-2"></i>
-                    <textarea id="ingredients" name="ingredients" class="materialize-textarea validate" placeholder="Enter recipe ingredients and quantities here." 
-                        required>{{ mongo_recipe.ingredients }}</textarea>
+                    <textarea id="ingredients" name="ingredients" class="materialize-textarea validate" placeholder="Enter each ingredient & quantity on a new line." 
+                        required>
+                        {%- for ingredient in mongo_recipe.ingredients -%}
+                            {%- if ingredient != mongo_recipe.ingredients[-1] -%}
+                                {{- ingredient -}} &#013;
+                            {%- else -%}
+                                {{- ingredient -}}
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </textarea>
                     <label for="ingredients">Ingredients</label>
                 </div>
             </div>
@@ -44,9 +52,25 @@
             <div class="row">
                 <div class="input-field col s12">
                     <i class="fa-solid fa-list-ol prefix red-text text-darken-2"></i>
-                    <textarea id="instructions" name="instructions" class="materialize-textarea validate" placeholder="Enter recipe instructions in numerical order here." 
-                        required>{{ mongo_recipe.instructions }}</textarea>                    
+                    <textarea id="instructions" name="instructions" class="materialize-textarea validate" placeholder="Enter each instruction in order and on a new line." 
+                        required>
+                        {%- for instruction in mongo_recipe.instructions -%}
+                            {%- if instruction != mongo_recipe.instructions[-1] -%}
+                                {{- instruction -}} &#013;
+                            {%- else -%}
+                                {{- instruction -}}
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </textarea>                    
                     <label for="instructions">Recipe Instructions</label>
+                </div>
+            </div>
+            <!-- image url -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="fa-solid fa-image prefix red-text text-darken-2"></i>
+                    <input id="img_url" name="img_url" type="text" class="validate" pattern="https?://.+" value="{{ recipe.img_url }}">
+                    <label for="img_url">Image URL</label>
                 </div>
             </div>
             <!-- submit button -->
