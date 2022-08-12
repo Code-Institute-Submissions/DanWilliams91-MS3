@@ -1,17 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h2 class="page-title center"><a href="{{ url_for('get_recipes') }}" class="theme-color">All Recipes</a></h2>
-
-        <ul class="pagination center main-text">
-            {% for letter in a_z %}
-                <li class=
-                "{% if letter_filter == letter %}
-                    active
-                {% endif %}">
-                <a href="{{ url_for('get_recipes_filter', sel_filter=letter) }}"><strong>{{ letter }}</strong></a></li>
-            {% endfor %}
-        </ul>
+    <h2 class="page-title center theme-color">Most Recent Recipes</h2>
 
     <div class="row center-align">
         {% if recipes|length > 0 %}

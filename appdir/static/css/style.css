@@ -126,75 +126,72 @@ nav {
 }
 
 /* Overruling Materialize's default layouts */
-.card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
-    margin-right: 0;
-}
 
-.card .card-content,
-.card .card-action {
-    padding: 0.5rem;
-}
+    .card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
+        margin-right: 0;
+    }
 
-.card .card-image {
-    overflow: hidden;
-    background-position: center;
-    background-size: cover;
-    height: 300px;
-}
+    .card .card-content,
+    .card .card-action {
+        padding: 0.5rem;
+    }
 
-.pagination li a {
-    position: relative;
-    bottom: 5px;
-}
+    .card .card-image {
+        overflow: hidden;
+        background-position: center;
+        background-size: cover;
+        height: 300px;
+    }
+
+    .pagination li a {
+        position: relative;
+        bottom: 5px;
+    }
+
+    .modal-content .row {
+        margin-bottom: 0;
+    }
 
 /* Code beginning here taken and adapted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp */
 
-#scroll-btn {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    right: 30px;
-    z-index: 99;
-    border: 1px white solid;
-    outline: none;
-    background-color: var(--theme-color);
-    color: white;
-    cursor: pointer;
-    padding: 15px;
-    border-radius: 50%;
-    font-size: 18px;
-  }
-  
-  #scroll-btn:hover {
-    background-color: #555;
-  }
+    #scroll-btn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        border: 1px white solid;
+        outline: none;
+        background-color: var(--theme-color);
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 50%;
+        font-size: 18px;
+    }
+    
+    #scroll-btn:hover {
+        background-color: #555;
+    }
 
 /* Code ending here taken and adapted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp */
 
 /* Media queries begin here */
 
-@media screen and (max-width: 600px) {
+    @media screen and (max-width: 600px) {
 
-    textarea.materialize-textarea {
-        height: 63px;
+        textarea.materialize-textarea {
+            height: 63px;
+        }
+    
     }
-  
-}
 
-@media screen and (min-width: 601px) and (max-width: 991px) {
+    @media screen and (max-width: 992px) {
 
-    /* .card .card-image {
-        height: hidden;
-    } */
-  
-}
-
-@media screen and (max-width: 992px) {
-
-    .modal {
-        width: 90%;
+        .modal {
+            width: 90%;
+        }
+    
     }
-  
-}
 
 /* Media queries end here */

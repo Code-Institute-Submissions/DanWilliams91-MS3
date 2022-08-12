@@ -43,46 +43,6 @@ $(document).ready(function () {
         }
     };
 
-
-    function addIngredientRow() {
-        let existingRows = $("[id^='ingredient-row']");
-        $("#ingredients-table").append(
-            `<tr>
-            <td>
-                <input id="ingredient-row-${existingRows.length}" name="ingredient-row-${existingRows.length}" minlength="3" maxlength="25"
-                    type="text" class="validate" required>
-                <label for="ingredient-row-${existingRows.length}" class="white-text">Enter ingredient here</label>
-            </td>
-            <td>
-                <input id="quantity-row-${existingRows.length}" name="quantity-row-${existingRows.length}" minlength="1" maxlength="25"
-                    type="text" class="validate" required>
-                <label for="quantity-row-${existingRows.length}" class="white-text">Enter quantity here</label>
-            </td>
-            </tr>`
-        )
-    };
-
-
-    function removeIngredientRows() {
-        let ingredientRows = ($("[id^='ingredient-row']"));
-        let quantityRows = ($("[id^='quantity-row']"));
-        for (let i = 0; i < ingredientRows.length; i++) {
-            if (!ingredientRows[i].classList.contains("valid") && !quantityRows[i].classList.contains("valid")) {
-                ingredientRows[i].closest("tr").remove();
-            }
-        }
-    }
-
-
-    function updateIngredients() {
-        let info = $("#ingredients-table input");
-        console.log(info)
-
-
-
-        
-    }
-
 // Functions end here
 
 // Event handlers begin here
@@ -104,43 +64,9 @@ $(document).ready(function () {
         topFunction()
     })
 
-
+    /** Redirects the user to the previous webpage when any ".btn-cancel" button is clicked */
     $(".btn-cancel").on("click", function() {
         window.history.back()
     })
-
-
-    /** */
-    // $("#add-ingredient-row").on("click", function() {
-    //     addIngredientRow()
-    // })
-
-
-    // /** */
-    // $("#remove-ingredient-row").on("click", function() {
-    //     removeIngredientRows()
-    // })
-
-
-    // /** */
-    // $("#ingredients-submit").on("click", function() {
-    //     updateIngredients()
-    // })
-
-
-    // /** */
-    // $("#add-ingredients").on("click", function() {
-    //     do {
-    //         $("#page-content").css("display", " none")
-    //         $("#recipe_name").attr("class", "hidden")
-    //         $("#category_name").attr("class", "hidden")
-    //         if (!$("#ingredients-modal").css("display", "block")) {
-    //             break;
-    //         }
-    //     } while ($("#ingredients-modal").css("display", "block"))
-    //     $("#recipe_name").attr("class", "validate")
-    //     $("#category_name").attr("class", "validate")
-    //     $("#page-content").css("display", " block")
-    // })
     
 //Event handlers end here

@@ -15,6 +15,8 @@
     <ul id="dropdown1" class="dropdown-content">
         <li><a href="{{ url_for('get_categories') }}">Categories</a></li>
         <li class="divider"></li>
+        <li><a href="{{ url_for('get_recipes_newest') }}">Most Recent</a></li>
+        <li class="divider"></li>
         <li><a href="{{ url_for('get_recipes') }}">Browse All</a></li>
     </ul>
     <ul id="dropdown2" class="dropdown-content">
@@ -50,6 +52,7 @@
     <ul class="sidenav" id="mobile-demo">
         <li><a href="{{ url_for('home') }}">Home</a></li>
         <li><a href="{{ url_for('get_categories') }}">Browse by Category</a></li>
+        <li><a href="{{ url_for('get_recipes_newest') }}">Browse Most Recent</a></li>
         <li><a href="{{ url_for('get_recipes') }}">Browse All Recipes</a></li>
         {% if session.user %}
             <li><a href="{{ url_for('add_recipe') }}">Add Recipe</a></li>
