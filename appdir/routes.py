@@ -656,7 +656,8 @@ def edit_recipe(recipe_id):
         mongo.db.recipes.update_one(
             {"id": recipe_id}, {"$set": mongo_details})
 
-        flash("Recipe { recipe.recipe_name } updated successfully.")
+        message = f"Recipe { recipe.recipe_name } updated successfully."
+        flash(message)
         if check_user_level() is False:
             return redirect(url_for("my_recipes"))
         else:
