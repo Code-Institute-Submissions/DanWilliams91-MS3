@@ -60,27 +60,31 @@
                         <!-- Recipe Modal Structure -->
                         <div id="recipe-modal-{{ recipe.id }}" class="modal recipe-modal">
                             <div class="modal-content red accent-4 white-text">
-                                <h3 class="modal-recipe-title">{{ recipe.recipe_name }}</h3>
+                                <h4 class="modal-recipe-title">{{ recipe.recipe_name }}</h4>
                                 <div class="row">
                                     <div class="col s12 m6 ingredients-content">
-                                        <h4>Ingredients</h4>
-                                        {% for mongo_recipe in mongo_recipes %}
-                                            {% if mongo_recipe.id == recipe.id %}
-                                                {%- for ingredient in mongo_recipe.ingredients -%}
-                                                    <ul>{{- ingredient }}</ul>
-                                                {%- endfor -%}
-                                            {% endif %}
-                                        {% endfor %}
+                                        <h5>Ingredients</h5>
+                                        <ul>
+                                            {% for mongo_recipe in mongo_recipes %}
+                                                {% if mongo_recipe.id == recipe.id %}
+                                                    {%- for ingredient in mongo_recipe.ingredients -%}
+                                                        <li>{{- ingredient }}</li>
+                                                    {%- endfor -%}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
                                     </div>
                                     <div class="col s12 m6">
-                                        <h4>Instructions</h4>
-                                        {% for mongo_recipe in mongo_recipes %}
-                                            {% if mongo_recipe.id == recipe.id %}
-                                                {%- for instruction in mongo_recipe.instructions -%}
-                                                    <ul>{{- instruction }}</ul>
-                                                {%- endfor -%}
-                                            {% endif %}
-                                        {% endfor %}
+                                        <h5>Instructions</h5>
+                                        <ol>
+                                            {% for mongo_recipe in mongo_recipes %}
+                                                {% if mongo_recipe.id == recipe.id %}
+                                                    {%- for instruction in mongo_recipe.instructions -%}
+                                                        <li>{{- instruction }}</li>
+                                                    {%- endfor -%}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ol>
                                     </div>
                                 </div>
                             </div>
