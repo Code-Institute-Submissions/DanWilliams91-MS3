@@ -26,16 +26,18 @@ def home():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """
-    Returns the registration webpage when the GET method is used.
+    When the GET method is used:
+        Returns the register.html registration webpage.
 
-    When the POST method is used, the function checks whether the username
-    already exists and, if so, returns the registration form with a flash
-    message to confirm that the username is taken. The function also checks
-    whether a user is already logged in and, if so, a flash message is
-    rendered to confirm that the current user must be logged out before a new
-    user can be created. If neither of these situations occur, the submitted
-    form data is used to add a new user to the database, whilst simultaneously
-    logging the new user into the app and rendering the profile page.
+    When the POST method is used:
+        The function checks whether the username already exists and, if so,
+        returns the registration form with a flash message to confirm that the
+        username is taken. The function also checks whether a user is already
+        logged in and, if so, a flash message is rendered to confirm that the
+        current user must be logged out before a new user can be created. If
+        neither of these situations occur, the submitted form data is used to
+        add a new user to the database, whilst simultaneously logging the new
+        user into the app and rendering the profile page.
     """
     if request.method == "POST":
         # check if username already exists in db
@@ -481,6 +483,8 @@ def add_recipe():
         flash("You need to be logged in to add a recipe.")
         return redirect(url_for("login"))
     if request.method == "POST":
+
+        #update Postgres db
         recipe_main = Name(
             recipe_name=request.form.get("recipe_name"),
             category_id=int(request.form.get("category_id")),
@@ -488,12 +492,26 @@ def add_recipe():
         )
         db.session.add(recipe_main)
         db.session.commit()
+
+        #update Mongo db
         new_recipe = Name.query.filter(
             Name.recipe_name == request.form.get("recipe_name"))
+        #ensure no blank lines in ingredients array
+        ingredients_unformatted = request.form.get("ingredients").splitlines()
+        ingredients = []
+        for ingredient in ingredients_unformatted:
+            if ingredient != "":
+                ingredients.append(ingredient)
+        #ensure no blank lines in instructions array
+        instructions_unformatted = request.form.get("instructions").splitlines()
+        instructions = []
+        for instruction in instructions_unformatted:
+            if instruction != "":
+                instructions.append(instruction)
         recipe_details = {
             "id": new_recipe[0].id,
-            "ingredients": request.form.get("ingredients").splitlines(),
-            "instructions": request.form.get("instructions").splitlines(),
+            "ingredients": ingredients,
+            "instructions": instructions,
             "created_by": session["user"]
         }
         mongo.db.recipes.insert_one(recipe_details)
@@ -506,8 +524,8 @@ def add_recipe():
 @app.route("/delete_recipe/<int:recipe_id>")
 def delete_recipe(recipe_id):
     """
-    Checks whether the current user is the original creator of the recipe
-    (Name) identified by the recipe_id parameter.
+    Firstly checks whether the current user is the original creator of the
+    recipe (Name) identified by the recipe_id parameter.
 
     If the current user is not the original creator of the recipe:
         The check_user_level() function confirms whether the current user is a
@@ -523,8 +541,8 @@ def delete_recipe(recipe_id):
 
         If the current user is not a superuser:
             The user is redirected to the my_recipes.html webpage via the
-            my_recipes() function and a flash message is displayed to confirm that
-            they can only delete their own recipes.
+            my_recipes() function and a flash message is displayed to confirm
+            that they can only delete their own recipes.
 
     If the current user is the original creator of the recipe:
         The recipe (Name) identified by the recipe_id parameter is deleted
@@ -552,8 +570,8 @@ def delete_recipe(recipe_id):
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
     """
-    Checks whether the current user is the original creator of the recipe
-    (Name) identified by the recipe_id parameter.
+    Firstly checks whether the current user is the original creator of the
+    recipe (Name) identified by the recipe_id parameter.
 
     If the current user is not the original creator of the recipe:
         The check_user_level() function confirms whether the current user is a
@@ -564,7 +582,7 @@ def edit_recipe(recipe_id):
                 The edit_recipe.html webpage is rendered with the current
                 recipe (Name) identified by the recipe_id parameter passed to
                 it, along with its associated data from the Mongo database and
-                lists of all Categories. 
+                lists of all Categories.
 
             When the POST method is used:
                 The recipe (Name) identified by the recipe_id parameter is
@@ -576,7 +594,7 @@ def edit_recipe(recipe_id):
         If the current user is not a superuser:
             The user is redirected to the my_recipes.html webpage via the
             my_recipes() function and a flash message is displayed to confirm
-            that they are only able to edit their own recipes.    
+            that they are only able to edit their own recipes.
 
     If the current user is the original creator of the recipe:
         When the GET method is used:
@@ -609,19 +627,36 @@ def edit_recipe(recipe_id):
             flash("You can only edit your own recipes!")
             return redirect(url_for("my_recipes"))
     if request.method == "POST":
+        # update Postgres db
         recipe.recipe_name = request.form.get("recipe_name"),
         recipe.category_id = int(request.form.get("category_id")),
         recipe.img_url = request.form.get("img_url")
         db.session.commit()
+
+        #update Mongo db
+        #ensure no blank lines in ingredients array
+        ingredients_unformatted = request.form.get("ingredients").splitlines()
+        ingredients = []
+        for ingredient in ingredients_unformatted:
+            if ingredient != "":
+                ingredients.append(ingredient)
+        instructions_unformatted = request.form.get(
+            "instructions").splitlines()
+        #ensure no blank lines in instructions array
+        instructions = []
+        for instruction in instructions_unformatted:
+            if instruction != "":
+                instructions.append(instruction)
         mongo_details = {
             "id": recipe_id,
-            "ingredients": request.form.get("ingredients").splitlines(),
-            "instructions": request.form.get("instructions").splitlines(),
+            "ingredients": ingredients,
+            "instructions": instructions,
             "created_by": mongo_recipe["created_by"]
         }
         mongo.db.recipes.update_one(
             {"id": recipe_id}, {"$set": mongo_details})
-        flash("Recipe updated successfully.")
+
+        flash("Recipe { recipe.recipe_name } updated successfully.")
         if check_user_level() is False:
             return redirect(url_for("my_recipes"))
         else:
