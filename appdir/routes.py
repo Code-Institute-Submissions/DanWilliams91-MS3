@@ -28,7 +28,6 @@ def register():
     """
     When the GET method is used:
         Returns the register.html registration webpage.
-
     When the POST method is used:
         The function checks whether the username already exists and, if so,
         returns the registration form with a flash message to confirm that the
@@ -72,7 +71,6 @@ def profile(username):
     """
     Renders the user's profile page if the user is logged in, or returns the
     login page if no user is logged in.
-
     Calls the is_superuser function to check whether the current user is a
     superuser, and passes the returned value to the profile page for
     conditional layouts of the page.
@@ -102,7 +100,6 @@ def login():
     When the GET method is used, the function checks whether a user is
     currently logged in. If so, a flash message is displayed to confirm this
     and the user is redirected to their profile page.
-
     When the POST method is used, the submitted form data is checked against
     the database. If either the username or password do not match a User
     stored in the database, a flash message is displayed to confirm that
@@ -154,20 +151,39 @@ def get_categories():
         "categories.html", categories=categories, recipes=recipes)
 
 
-@app.route("/get_recipes")
+@app.route("/get_recipes", methods=["GET", "POST"])
 def get_recipes():
     """
-    Returns the recipes.html webpage and passes lists of all recipes (Name),
-    Categories and recipe data listed on the Mongo database.
+    When the GET method is used:
+        Returns the recipes.html webpage and passes lists of all recipes (Name),
+        Categories and recipe data listed on the Mongo database. The a_z
+        global variable is also passed to allow iteration of the alphabet
+        for the functional purposes of the webpage.
 
-    The a_z global variable is also passed to allow iteration of the alphabet
-    for the functional purposes of the webpage.
+    When the POST method is used:
+        Returns the recipes.html webpage and passes lists of all recipes
+        (Name) which match the search criteria, along with all Categories
+        and recipe data listed on the Mongo database.
     """
     categories = list(Category.query.order_by(Category.id).all())
-    recipes = list(Name.query.order_by(Name.recipe_name).all())
+    all_recipes = list(Name.query.order_by(Name.recipe_name).all())
     mongo_recipes = list(mongo.db.recipes.find())
+
+    if request.method == "POST":
+        query = request.form.get("query").splitlines()
+        print(query)
+        recipes = []
+        for recipe in all_recipes:
+            for i in query:
+                print(i)
+                if i != "" and i.lower() in recipe.recipe_name.lower():
+                    recipes.append(recipe)        
+        return render_template(
+            "recipes.html", categories=categories, recipes=recipes,
+            mongo_recipes=mongo_recipes, query=query)
+
     return render_template(
-        "recipes.html", categories=categories, recipes=recipes,
+        "recipes.html", categories=categories, recipes=all_recipes,
         mongo_recipes=mongo_recipes, a_z=a_z)
 
 
@@ -178,7 +194,6 @@ def get_recipes_filter(sel_filter):
     Categories and recipe data listed on the Mongo database. Displays recipes
     (Names) whose recipe_name values begin with the same letter as the
     sel_filter parameter.
-
     The a_z global variable is also passed to allow iteration of the alphabet
     for the functional purposes of the webpage.
     """
@@ -187,14 +202,14 @@ def get_recipes_filter(sel_filter):
     recipes = []
     for recipe in all_recipes:
         if recipe.recipe_name.startswith(sel_filter) \
-        or recipe.recipe_name.startswith(sel_filter.lower()):
-            recipes.append(recipe)
+            or recipe.recipe_name.startswith(sel_filter.lower()):
+                recipes.append(recipe)
     mongo_recipes = list(mongo.db.recipes.find())
     letter_filter = sel_filter
     return render_template(
         "recipes.html", categories=categories, recipes=recipes,
         mongo_recipes=mongo_recipes, a_z=a_z, letter_filter=letter_filter)
-        
+
 
 @app.route("/get_recipes_newest")
 def get_recipes_newest():
@@ -237,7 +252,6 @@ def manage_categories():
     """
     Returns the manage_categories webpage with a list of all categories and
     recipes for superusers to create, add, edit and delete categories.
-
     If the user requesting the webpage is not a superuser, they are
     redirected to their profile page and a flash message is displayed to
     confirm they are not able to view the requested webpage.
@@ -258,13 +272,11 @@ def add_category():
     When the GET method is used:
         Returns the add_category webpage which enables superusers to add a new
         category.
-
     When the POST method is used:
         The submitted form data is used to add a new Category to the database.
         The user is redirected to the manage_categories webpage and a flash
         message is displayed to confirm that the Category was added to the
         database.
-
     If the user requesting the webpage is not a superuser, they are
     redirected to their profile page and a flash message is displayed to
     confirm they are not able to view the requested webpage.
@@ -291,13 +303,11 @@ def edit_category(category_id):
     When the GET method is used:
         Returns the edit_category.html webpage for the Category identified by
         the category_id parameter.
-
     When the POST method is used:
         Updates the Category identified by the category_id parameter with the
         data submitted by the user via the HTML form. The user is then
         redirected to the manage_categories.html webpage and a flash message
         is displayed to confirm that the Category was updated.
-
     If the user requesting the webpage is not a superuser, they are
     redirected to their profile page and a flash message is displayed to
     confirm they are not able to view the requested webpage.
@@ -322,7 +332,6 @@ def delete_category(category_id):
     Deletes the Category identified by the category_id parameter from the
     database, then redirects the user to the manage_categories webpage with a
     flash message to confirm the Category deletion.
-
     If the user performing the action is not a superuser, they are redirected
     to their profile page and a flash message is displayed to confirm they are
     not able to perform the requested action.
@@ -343,7 +352,6 @@ def get_users():
     """
     Returns the users.html template with a list of all Users for superusers
     to manage.
-
     If the user requesting the webpage is not a superuser, they are
     redirected to their profile page and a flash message is displayed to
     confirm they are not able to view the requested webpage.
@@ -363,7 +371,6 @@ def delete_user(user_id):
     redirects the current user to the users.html webpage via the get_users()
     function, along with a flash message to confirm that the User was deleted
     successfully.
-
     If the user performing the action is not a superuser, they are redirected
     to their profile page and a flash message is displayed to confirm they are
     not able to perform the requested action.
@@ -385,14 +392,12 @@ def edit_user(user_id):
     When the GET method is used:
         Returns the edit_user.html webpage for the User identified by
         the user_id parameter.
-
     When the POST method is used:
         Updates the User identified by the user_id parameter with the
         data submitted by the user via the HTML form. The user is then
         redirected to the users.html webpage via the get_users() function,
         along with a flash message to confirm that the User was deleted
         successfully.
-
     If the user requesting the webpage is not a superuser, they are
     redirected to their profile page and a flash message is displayed to
     confirm they are not able to view the requested webpage.
@@ -435,12 +440,18 @@ def my_recipes():
         mongo_recipes=mongo_recipes)
 
 
-@app.route("/manage_recipes")
+@app.route("/manage_recipes", methods=["GET", "POST"])
 def manage_recipes():
     """
-    Returns the manage_recipes webpage with a list of all categories and
-    recipes (Names) - along with their associated data stored on the Mongo
-    database - for superusers to manage.
+    When the GET method is used:
+        Returns the manage_recipes webpage with a list of all categories and
+        recipes (Names) - along with their associated data stored on the Mongo
+        database - for superusers to manage.
+
+    When the POST method is used:
+        Returns the manage_recipes.html webpage and passes lists of all
+        recipes (Name) which match the search criteria, along with all
+        Categories and recipe data listed on the Mongo database.
 
     If the user requesting the webpage is not a superuser, they are
     redirected to their profile page and a flash message is displayed to
@@ -448,30 +459,41 @@ def manage_recipes():
     """
     if check_user_level() is False:
         return redirect(url_for("my_recipes"))
-    recipes = list(Name.query.order_by(Name.recipe_name).all())
+    all_recipes = list(Name.query.order_by(Name.recipe_name).all())
     categories = list(Category.query.order_by(Category.id).all())
     mongo_recipes = list(mongo.db.recipes.find())
+
+    if request.method == "POST":
+        query = request.form.get("query").splitlines()
+        print(query)
+        recipes = []
+        for recipe in all_recipes:
+            for i in query:
+                print(i)
+                if i != "" and i.lower() in recipe.recipe_name.lower():
+                    recipes.append(recipe)        
+        return render_template(
+            "manage_recipes.html", mongo_recipes=mongo_recipes,
+            recipes=recipes, categories=categories, query=query)
+
     return render_template(
-        "manage_recipes.html", mongo_recipes=mongo_recipes, recipes=recipes,
-        categories=categories)
+        "manage_recipes.html", mongo_recipes=mongo_recipes,
+        recipes=all_recipes, categories=categories, a_z=a_z)
 
 
 @app.route("/add_recipe", methods=["GET", "POST"])
 def add_recipe():
     """
     Checks whether a user is logged into the app.
-
     If a user is not logged in:
         The user is redirected to the login webpage and a flash message is
         displayed to confirm that they must be logged in to add a new recipe
         (Name).
-
     If a user is logged in:
         When the GET method is used:
             The add_recipe.html webpage is returned with a list of all
             categories to enable the user to select an appropriate category
             for the new recipe.
-
         When the POST method is used:
             Adds a new recipe (Name) to the database and its associated
             data to the Mongo database, and redirects the user to the
@@ -526,11 +548,9 @@ def delete_recipe(recipe_id):
     """
     Firstly checks whether the current user is the original creator of the
     recipe (Name) identified by the recipe_id parameter.
-
     If the current user is not the original creator of the recipe:
         The check_user_level() function confirms whether the current user is a
         superuser.
-
         If the current user is a superuser:
             The recipe (Name) identified by the recipe_id parameter is deleted
             from the database and its associated data is deleted from the
@@ -538,12 +558,10 @@ def delete_recipe(recipe_id):
             manage_recipes.html webpage via the manage_recipes() function and
             a flash message is displayed to confirm the deletion of the recipe
             (Name).
-
         If the current user is not a superuser:
             The user is redirected to the my_recipes.html webpage via the
             my_recipes() function and a flash message is displayed to confirm
             that they can only delete their own recipes.
-
     If the current user is the original creator of the recipe:
         The recipe (Name) identified by the recipe_id parameter is deleted
         from the database and its associated data is deleted from the
@@ -572,30 +590,25 @@ def edit_recipe(recipe_id):
     """
     Firstly checks whether the current user is the original creator of the
     recipe (Name) identified by the recipe_id parameter.
-
     If the current user is not the original creator of the recipe:
         The check_user_level() function confirms whether the current user is a
         superuser.
-
         If the current user is a superuser:
             When the GET method is used:
                 The edit_recipe.html webpage is rendered with the current
                 recipe (Name) identified by the recipe_id parameter passed to
                 it, along with its associated data from the Mongo database and
                 lists of all Categories.
-
             When the POST method is used:
                 The recipe (Name) identified by the recipe_id parameter is
                 updated on the Postgres database and the Mongo database in
                 line with the data submitted via the HTML form. The user is
                 then redirected to the manage_recipes.html webpage via the
                 manage_recipes() function.
-
         If the current user is not a superuser:
             The user is redirected to the my_recipes.html webpage via the
             my_recipes() function and a flash message is displayed to confirm
             that they are only able to edit their own recipes.
-
     If the current user is the original creator of the recipe:
         When the GET method is used:
             The edit_recipe.html webpage is rendered with the current
@@ -610,7 +623,6 @@ def edit_recipe(recipe_id):
                 line with the data submitted via the HTML form. The user is
                 then redirected to the my_recipes.html webpage via the
                 my_recipes() function.
-
             If the current user is a not a superuser:
                 The recipe (Name) identified by the recipe_id parameter is
                 updated on  the Postgres database and the Mongo database in
@@ -665,3 +677,4 @@ def edit_recipe(recipe_id):
     return render_template(
         "edit_recipe.html", categories=categories, recipe=recipe,
         mongo_recipe=mongo_recipe)
+        

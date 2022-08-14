@@ -82,6 +82,7 @@
             {% endfor %}
         {% else %}
             <h3 class="theme-color center">No results found</h3>
+            <a class="theme-color text-link center" href="{{ url_for('get_recipes') }}">Click to View All Recipes</a>
         {% endif %}
     </div>
 

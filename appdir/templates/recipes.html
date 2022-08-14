@@ -3,16 +3,36 @@
 
     <h2 class="page-title center"><a href="{{ url_for('get_recipes') }}" class="theme-color">All Recipes</a></h2>
 
-        <ul class="pagination center main-text">
-            {% for letter in a_z %}
-                <li class=
-                "{% if letter_filter == letter %}
-                    active
-                {% endif %}">
-                <a href="{{ url_for('get_recipes_filter', sel_filter=letter) }}"><strong>{{ letter }}</strong></a></li>
-            {% endfor %}
-        </ul>
+    <!-- search bar -->
+    <div id="search-bar" class="row card-panel grey lighten-3">
+        <form action="{{ url_for('get_recipes', query=query) }}" method="post" class="col s12">
+            <div class="row valign-wrapper center-align">
+                <div class="input-field col s12 m9">
+                    <i class="fas fa-search prefix light-blue-text text-darken-4"></i>
+                    <input type="text" name="query" id="query" minlength="3" class="validate" required>
+                    <label for="query">Search Recipes</label>
+                </div>
+                <div class="col s12 m3">
+                    <button type="submit" class="red darken-4 btn text-shadow">
+                        <i class="fas fa-search left"></i> Search
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 
+    <!-- pagination simulation -->
+    <ul class="pagination center main-text">
+        {% for letter in a_z %}
+            <li class=
+            "{% if letter_filter == letter %}
+                active
+            {% endif %}">
+            <a href="{{ url_for('get_recipes_filter', sel_filter=letter) }}"><strong>{{ letter }}</strong></a></li>
+        {% endfor %}
+    </ul>
+
+    <!-- main content -->
     <div class="row center-align">
         {% if recipes|length > 0 %}
             {% for recipe in recipes %}
@@ -92,6 +112,7 @@
             {% endfor %}
         {% else %}
             <h3 class="theme-color center">No results found</h3>
+            <a class="theme-color text-link center" href="{{ url_for('get_recipes') }}">Click to View All Recipes</a>
         {% endif %}
     </div>
 

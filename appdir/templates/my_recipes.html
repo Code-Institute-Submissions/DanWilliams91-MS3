@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row center-align">
         {% if user_recipes|length > 0 %}
             {% for recipe in user_recipes %}
                 <div class="col s12 m4 l3">
@@ -99,6 +99,7 @@
             {% endfor %}
         {% else %}
             <h3 class="theme-color center">No results found</h2>
+                <a class="theme-color text-link center" href="{{ url_for('get_recipes') }}">Click to View All Website Recipes</a>
         {% endif %}
     </div>
 

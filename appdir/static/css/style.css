@@ -89,6 +89,7 @@ nav {
 
 .text-link:hover {
     background-color: var(--theme-color);
+    color: white;
 }
 
 .underline {
@@ -155,7 +156,7 @@ nav {
 
     .pagination li a {
         position: relative;
-        bottom: 5px;
+        bottom: 15px;
     }
 
     .modal-content .row {
@@ -164,6 +165,15 @@ nav {
 
     .category-card {
         height: auto!important;
+    }
+
+    .valign-wrapper {
+        flex-wrap: wrap;
+    }
+
+    #search-bar {
+        padding: 0;
+        box-shadow: none;
     }
 
 /* Code beginning here taken and adapted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp */
