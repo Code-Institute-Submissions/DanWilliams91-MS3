@@ -5,6 +5,7 @@
 
     <div class="container center">
         <div class="col s12 center">
+            <!-- users table -->
             <table class="highlight centered">
                 <thead>
                     <tr>
@@ -28,13 +29,13 @@
                             </td>
                             <td>
                                 <div class="card-action">
-                                    {% if user.id == 1 %} <!-- If the user is the original admin superuser -->
+                                    {% if user.id == 1 %} <!-- if the user is the original admin superuser -->
                                         <a class="btn tooltipped" data-position="top" data-tooltip="This user cannot be edited or deleted.">Edit</a>
-                                        <!-- Modal Trigger -->
+                                        <!-- delete user modal trigger -->
                                         <a class="btn tooltipped" data-position="top" data-tooltip="This user cannot be edited or deleted.">Delete</a>
                                     {% else %}
                                         <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn green darken-4">Edit</a>
-                                        <!-- Modal Trigger -->
+                                        <!-- delete user modal trigger -->
                                         <button data-target="modal-delete-{{ user.user_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</button>
                                     {% endif %}
                                 </div>
@@ -45,7 +46,7 @@
             </table>
         </div>
         {% for user in users %}
-            <!-- Modal Structure -->
+            <!-- delete user modal structure -->
             <div id="modal-delete-{{ user.user_name.lower() }}" class="modal">
                 <div class="modal-content red accent-4 white-text">
                     <h3>Warning!</h3>
@@ -54,10 +55,12 @@
                     <p>Are you sure you want to permanently delete the <strong>{{ user.user_name }}</strong> user?</p>
                 </div>
                 <div class="modal-footer-workaround row modal-fixed-footer">
+                    <!-- delete user button -->
                     <div class="col s6 center">
                         <a href="{{ url_for('delete_user', user_id=user.id) }}"
                             class="modal-action btn red darken-4 white-text">DELETE USER</a>
                     </div>
+                    <!-- cancel button -->
                     <div class="col s6 center">
                         <button class="modal-action modal-close btn green darken-4 white-text">CANCEL</button>
                     </div>

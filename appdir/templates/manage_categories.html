@@ -4,6 +4,7 @@
     <h2 class="page-title theme-color center">Manage Categories</h2>
 
     <div class="row">
+        <!-- add category button -->
         <div class="col s12 center-align">
             <a href="{{ url_for('add_category') }}" class="btn-large red accent-4 text-shadow">
                 Add Category <i class="fas fa-plus-square right"></i>
@@ -11,15 +12,19 @@
         </div>
     </div>
 
+    <!-- category cards -->
     <div class="row">
         {% if categories|length > 0 %}
             {% for category in categories %}
                 <div class="col s12 m4 l3">
                     <div class="card red-subtheme text-shadow center-align">
+                        <!-- category image -->
                         <div class="card-image" style="background-image: url(../static/images/{{ category.category_img }});">
                         </div>
                         <div class="card-content white-text content-wrapper">
+                            <!-- category name and link -->
                             <a href="{{ url_for('view_category', category_id=category.id) }}" class="card-title text-link">{{ category.category_name }}</a>
+                            <!-- number of recipes in category -->
                             <p>
                                 {% set listLength = namespace(n = 0) %}
                                 {% for recipe in recipes %}
@@ -37,11 +42,12 @@
                             </p>
                         </div>
                         <div class="card-action">
+                            <!-- edit category button -->
                             <a href="{{ url_for('edit_category', category_id=category.id) }}" class="btn green darken-4">Edit</a>
-                            <!-- Modal Trigger -->
+                            <!-- modal trigger -->
                             <button data-target="modal-delete-{{ category.category_name.lower() }}" class="btn red darken-4 modal-trigger">Delete</button>
                         </div>
-                        <!-- Modal Structure -->
+                        <!-- modal structure -->
                         <div id="modal-delete-{{ category.category_name.lower() }}" class="modal">
                             <div class="modal-content red accent-4 white-text">
                                 <h3>Warning!</h3>
@@ -49,10 +55,12 @@
                                 <p>Are you sure you want to permanently delete the <strong>{{ category.category_name }}</strong> category and all its associated recipes?</p>
                             </div>
                             <div class="modal-footer">
+                                <!-- delete button -->
                                 <div class="col s6 center">
                                     <a href="{{ url_for('delete_category', category_id=category.id) }}"
                                         class="modal-action btn red darken-4 white-text">DELETE CATEGORY</a>
                                 </div>
+                                <!-- cancel button -->
                                 <div class="col s6 center">
                                     <button class="modal-action modal-close btn green darken-4 white-text">CANCEL</button>
                                 </div>

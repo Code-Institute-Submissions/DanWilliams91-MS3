@@ -22,11 +22,6 @@
         <li class="divider"></li>
         <li><a href="{{ url_for('get_recipes') }}">Browse All</a></li>
     </ul>
-    <ul id="dropdown2" class="dropdown-content">
-        <li><a href="{{ url_for('my_recipes') }}">My Recipes</a></li>
-        <li class="divider"></li>
-        <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-    </ul>
     <!-- Dropdown Structure End -->
 
     <!-- Navbar Start -->
@@ -36,7 +31,7 @@
         <a data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons"><i class="fa-solid fa-bars"></i></i></a>
         <ul class="right hide-on-med-and-down">
             <li><a href="{{ url_for('home') }}">Home</a></li>
-            <!-- Dropdown Trigger 1 -->
+            <!-- Dropdown Trigger -->
             <li><a class="dropdown-trigger" data-target="dropdown1">Browse<i class="material-icons right"><i class="fa-solid fa-square-caret-down"></i></i></a></li>
             {% if session.user %}
                 <li><a href="{{ url_for('add_recipe') }}">Add Recipe</a></li>

@@ -1,10 +1,12 @@
 $(document).ready(function () {
     $(".dropdown-trigger").dropdown();
-    $('.sidenav').sidenav();
-    $('.modal').modal();
-    $('select').formSelect();
-    $('.tooltipped').tooltip({enterDelay: 300});
+    $(".sidenav").sidenav();
+    $(".modal").modal();
+    $("select").formSelect();
+    $(".tooltipped").tooltip({enterDelay: 300});
     $("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: "absolute"});
+    /* Workaround for Materialize setting readonly="true" on disabled dropdowns */
+    $(".select-dropdown.dropdown-trigger").removeAttr("readonly").prop("readonly", true);
     checkScreenSize();
     });
 
@@ -16,11 +18,11 @@ $(document).ready(function () {
     // Code adapted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp
     function scrollFunction() {
         if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            $("#scroll-btn").css("display", "block")
+            $("#scroll-btn").css("display", "block");
         } else {
-            $("#scroll-btn").css("display", "none")
+            $("#scroll-btn").css("display", "none");
         }
-    };
+    }
 
     /** Scrolls to the top of the page when the user clicks on the button with an
      * ID of scroll-btn
@@ -29,11 +31,11 @@ $(document).ready(function () {
     function topFunction() {
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-    };
+    }
 
 
     /** Checks the width of the window and applies or removes the "valign-wrapper"
-     *  class based on whether the window width is categorised as small or not. 
+     *  class based on whether the window width is categorised as small. 
      */
     function checkScreenSize() {
         if ($(window).width() <= 600) {
@@ -41,7 +43,7 @@ $(document).ready(function () {
         } else {
             $(".valign-workaround").addClass("valign-wrapper");
         }
-    };
+    }
 
 // Functions end here
 
@@ -61,12 +63,12 @@ $(document).ready(function () {
 
     /** Calls the topFunction function when the "Go to top" button is clicked */
     $("#scroll-btn").on("click", function() {
-        topFunction()
-    })
+        topFunction();
+    });
 
     /** Redirects the user to the previous webpage when any ".btn-cancel" button is clicked */
     $(".btn-cancel").on("click", function() {
-        window.history.back()
-    })
+        window.history.back();
+    });
     
 //Event handlers end here

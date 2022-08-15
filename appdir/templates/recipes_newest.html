@@ -4,10 +4,12 @@
     <h2 class="page-title center theme-color">Most Recent Recipes</h2>
 
     <div class="row center-align">
+        <!-- recipe cards -->
         {% if recipes|length > 0 %}
             {% for recipe in recipes %}
                 <div class="col s12 m6 l3">
                     <div class="card red-subtheme text-shadow center-align">
+                        <!-- recipe image -->
                         <div class="card-image" style="background-image: url(
                             {% if recipe.img_url != '' %}
                                 {{ recipe.img_url }}
@@ -17,9 +19,11 @@
                             );">
                         </div>
                         <div class="card-content white-text content-wrapper">
-                            <!-- Modal Trigger -->
+                            <!-- recipe name and recipe modal trigger -->
                             <a href="#recipe-modal-{{ recipe.id }}" class="card-title modal-trigger text-link">{{ recipe.recipe_name }}</a>
+                            <!-- recipe category -->
                             <p>Category: {{ recipe.category }}</p>
+                            <!-- recipe owner -->
                             <p>Owner: 
                                 {% for mongo_recipe in mongo_recipes %}
                                     {% if mongo_recipe.id == recipe.id %}
@@ -29,17 +33,19 @@
                             </p>
                         </div>
                         <div class="card-action">
-                            <!-- Additional Modal Trigger -->
+                            <!-- additional recipe modal trigger -->
                             <a href="#recipe-modal-{{ recipe.id }}" class="btn card-btn modal-trigger">View Details</a>
                         </div>
                     </div>
                 </div>
-                <!-- Modal Structure -->
+                <!-- recipe modal structure -->
                 <div id="recipe-modal-{{ recipe.id }}" class="modal recipe-modal">
                     <div class="modal-content red accent-4 white-text">
                         <i class="fa-solid fa-circle-xmark modal-exit modal-close"></i>
+                        <!-- recipe name -->
                         <h4 class="modal-recipe-title">{{ recipe.recipe_name }}</h4>
                         <div class="row">
+                            <!-- recipe ingredients -->
                             <div class="col s12 m6 ingredients-content">
                                 <h5>Ingredients</h5>
                                 <ul>
@@ -52,6 +58,7 @@
                                     {% endfor %}
                                 </ul>
                             </div>
+                            <!-- recipe instructions -->
                             <div class="col s12 m6">
                                 <h5>Instructions</h5>
                                 <ol>
@@ -65,6 +72,7 @@
                                 </ol>
                             </div>
                         </div>
+                        <!-- recipe owner -->
                         <h4>Owner: 
                             {% for mongo_recipe in mongo_recipes %}
                                 {% if mongo_recipe.id == recipe.id %}
@@ -74,6 +82,7 @@
                         </h4>
                     </div>
                     <div class="modal-footer">
+                        <!-- close modal button -->
                         <div class="col s12 center">
                             <button class="modal-action modal-close btn green darken-4 white-text">Close</button>
                         </div>
