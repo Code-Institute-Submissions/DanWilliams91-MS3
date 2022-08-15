@@ -15,10 +15,10 @@
         {% if categories|length > 0 %}
             {% for category in categories %}
                 <div class="col s12 m4 l3">
-                    <div class="card red accent-5 text-shadow center-align">
+                    <div class="card red-subtheme text-shadow center-align">
                         <div class="card-image" style="background-image: url(../static/images/{{ category.category_img }});">
                         </div>
-                        <div class="card-content white-text">
+                        <div class="card-content white-text content-wrapper">
                             <a href="{{ url_for('view_category', category_id=category.id) }}" class="card-title text-link">{{ category.category_name }}</a>
                             <p>
                                 {% set listLength = namespace(n = 0) %}

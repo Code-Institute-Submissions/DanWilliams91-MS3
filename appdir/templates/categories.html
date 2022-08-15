@@ -7,7 +7,7 @@
         {% if categories|length > 0 %}
             {% for category in categories %}
                 <div class="col s12 m4 l3">
-                    <div class="card red accent-5 text-shadow center-align">
+                    <div class="card red-subtheme text-shadow center-align">
                         <div class="card-image" style="background-image: url(../static/images/{{ category.category_img }});">
                         </div>
                         <div class="card-content white-text category-card">
@@ -29,7 +29,7 @@
                             </p>
                         </div>
                         <div class="card-action">
-                            <a href="{{ url_for('view_category', category_id=category.id) }}" class="btn red darken-4">View Recipes</a>
+                            <a href="{{ url_for('view_category', category_id=category.id) }}" class="btn card-btn">View Recipes</a>
                         </div>
                     </div>
                 </div>

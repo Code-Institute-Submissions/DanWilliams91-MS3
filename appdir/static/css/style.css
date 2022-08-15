@@ -2,6 +2,7 @@
 
 :root {
     --theme-color: rgb(213, 1, 1);
+    --sub-theme-color: rgb(175, 19, 8);
 }
 
 body {
@@ -27,18 +28,15 @@ li {
 ol {
     text-align: left;
 }
+
+.red-subtheme {
+    background-color: var(--sub-theme-color);
+}
   
 .brand-logo,
 .page-title {
     font-family: 'Dancing Script', cursive;
     font-weight: bold;
-}
-
-.dropdown-content li > a,
-.dropdown-content li > span,
-.sidenav li > a,
-.theme-color {
-    color: var(--theme-color);
 }
 
 .main-text {
@@ -71,9 +69,19 @@ nav {
     background-color: var(--theme-color);
 }
 
+.btn,
+.btn-large {
+    font-weight: 600;
+}
+
 .btn.tooltipped {
     background-color: lightgrey;
-    color: darkgray;
+    color: black;
+}
+
+.card-btn {
+    background-color: white;
+    color: var(--theme-color);
 }
 
 .text-link {
@@ -83,7 +91,7 @@ nav {
     box-shadow: none;
     height: auto;
     width: fit-content;
-    margin: auto;
+    margin: 0 auto;
     cursor: pointer;
 }
 
@@ -124,10 +132,6 @@ nav {
     max-height: 78vh;
 }
 
-.recipe-modal .ingredients-content {
-    margin-bottom: 1rem;
-}
-
 .notice {
     font-size: x-large;
     background-color: yellow;
@@ -135,11 +139,22 @@ nav {
     padding: 0.5em;
 }
 
-/* Overruling Materialize's default layouts */
+.recipe-modal .ingredients-content {
+    margin-bottom: 1rem;
+}
 
-    .card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
-        margin-right: 0;
-    }
+.input-field>label {
+    color: black;
+}
+
+.dropdown-content li > a,
+.dropdown-content li > span,
+.sidenav li > a,
+.theme-color {
+    color: var(--theme-color);
+}
+
+/* Overruling Materialize's default layouts */
 
     .card .card-content,
     .card .card-action {
@@ -154,21 +169,34 @@ nav {
         height: 300px;
     }
 
-    .pagination li a {
-        position: relative;
-        bottom: 15px;
-    }
-
-    .modal-content .row {
-        margin-bottom: 0;
-    }
-
     .category-card {
         height: auto!important;
     }
 
     .valign-wrapper {
         flex-wrap: wrap;
+    }
+
+    .content-wrapper {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .modal-content .row {
+        margin-bottom: 0;
+    }
+
+    .pagination li a {
+        position: relative;
+        bottom: 15px;
+    }
+
+    .card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
+        margin-right: 0;
     }
 
     #search-bar {
@@ -204,8 +232,8 @@ nav {
 
     @media screen and (max-width: 600px) {
 
-        textarea.materialize-textarea {
-            height: 63px;
+        .responsive-label {
+            height: 63px!important;
         }
     
     }

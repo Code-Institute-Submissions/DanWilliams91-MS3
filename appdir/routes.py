@@ -115,7 +115,7 @@ def login():
         if existing_user:
             # ensure hashed password matches user input
             if check_password_hash(
-                existing_user[0].password, request.form.get("password")):
+                    existing_user[0].password, request.form.get("password")):
                 session["user"] = request.form.get("username").lower()
                 flash("Login successful. Welcome back, {}!".format(
                     request.form.get("username")))
@@ -155,9 +155,9 @@ def get_categories():
 def get_recipes():
     """
     When the GET method is used:
-        Returns the recipes.html webpage and passes lists of all recipes (Name),
-        Categories and recipe data listed on the Mongo database. The a_z
-        global variable is also passed to allow iteration of the alphabet
+        Returns the recipes.html webpage and passes lists of all recipes
+        (Name), Categories and recipe data listed on the Mongo database. The
+        a_z global variable is also passed to allow iteration of the alphabet
         for the functional purposes of the webpage.
 
     When the POST method is used:
@@ -177,7 +177,7 @@ def get_recipes():
             for i in query:
                 print(i)
                 if i != "" and i.lower() in recipe.recipe_name.lower():
-                    recipes.append(recipe)        
+                    recipes.append(recipe)
         return render_template(
             "recipes.html", categories=categories, recipes=recipes,
             mongo_recipes=mongo_recipes, query=query)
@@ -202,8 +202,8 @@ def get_recipes_filter(sel_filter):
     recipes = []
     for recipe in all_recipes:
         if recipe.recipe_name.startswith(sel_filter) \
-            or recipe.recipe_name.startswith(sel_filter.lower()):
-                recipes.append(recipe)
+                or recipe.recipe_name.startswith(sel_filter.lower()):
+            recipes.append(recipe)
     mongo_recipes = list(mongo.db.recipes.find())
     letter_filter = sel_filter
     return render_template(
@@ -315,11 +315,11 @@ def edit_category(category_id):
     if check_user_level() is False:
         flash("You must be a superuser to manage categories!")
         return redirect(url_for(
-            "profile", username=session["user"]))    
+            "profile", username=session["user"]))
     category = Category.query.get_or_404(category_id)
     if request.method == "POST":
         category.category_name = request.form.get("category_name")
-        category.category_img=request.form.get("category_img")
+        category.category_img = request.form.get("category_img")
         db.session.commit()
         flash("Category updated successfully.")
         return redirect(url_for("manage_categories"))
@@ -471,7 +471,7 @@ def manage_recipes():
             for i in query:
                 print(i)
                 if i != "" and i.lower() in recipe.recipe_name.lower():
-                    recipes.append(recipe)        
+                    recipes.append(recipe)
         return render_template(
             "manage_recipes.html", mongo_recipes=mongo_recipes,
             recipes=recipes, categories=categories, query=query)
@@ -506,7 +506,7 @@ def add_recipe():
         return redirect(url_for("login"))
     if request.method == "POST":
 
-        #update Postgres db
+        # update Postgres db
         recipe_main = Name(
             recipe_name=request.form.get("recipe_name"),
             category_id=int(request.form.get("category_id")),
@@ -515,17 +515,18 @@ def add_recipe():
         db.session.add(recipe_main)
         db.session.commit()
 
-        #update Mongo db
+        # update Mongo db
         new_recipe = Name.query.filter(
             Name.recipe_name == request.form.get("recipe_name"))
-        #ensure no blank lines in ingredients array
+        # ensure no blank lines in ingredients array
         ingredients_unformatted = request.form.get("ingredients").splitlines()
         ingredients = []
         for ingredient in ingredients_unformatted:
             if ingredient != "":
                 ingredients.append(ingredient)
-        #ensure no blank lines in instructions array
-        instructions_unformatted = request.form.get("instructions").splitlines()
+        # ensure no blank lines in instructions array
+        instructions_unformatted = request.form.get(
+            "instructions").splitlines()
         instructions = []
         for instruction in instructions_unformatted:
             if instruction != "":
@@ -615,7 +616,7 @@ def edit_recipe(recipe_id):
             recipe (Name) identified by the recipe_id parameter passed to
             it, along with its associated data from the Mongo database and
             lists of all Categories.
-        
+
         When the POST method is used:
             If the current user is a superuser:
                 The recipe (Name) identified by the recipe_id parameter is
@@ -645,8 +646,8 @@ def edit_recipe(recipe_id):
         recipe.img_url = request.form.get("img_url")
         db.session.commit()
 
-        #update Mongo db
-        #ensure no blank lines in ingredients array
+        # update Mongo db
+        # ensure no blank lines in ingredients array
         ingredients_unformatted = request.form.get("ingredients").splitlines()
         ingredients = []
         for ingredient in ingredients_unformatted:
@@ -654,7 +655,7 @@ def edit_recipe(recipe_id):
                 ingredients.append(ingredient)
         instructions_unformatted = request.form.get(
             "instructions").splitlines()
-        #ensure no blank lines in instructions array
+        # ensure no blank lines in instructions array
         instructions = []
         for instruction in instructions_unformatted:
             if instruction != "":
@@ -677,4 +678,3 @@ def edit_recipe(recipe_id):
     return render_template(
         "edit_recipe.html", categories=categories, recipe=recipe,
         mongo_recipe=mongo_recipe)
-        

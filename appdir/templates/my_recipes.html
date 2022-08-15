@@ -15,7 +15,7 @@
         {% if user_recipes|length > 0 %}
             {% for recipe in user_recipes %}
                 <div class="col s12 m4 l3">
-                    <div class="card red accent-5 text-shadow center-align">
+                    <div class="card red-subtheme text-shadow center-align">
                         <div class="card-image" style="background-image: url(
                             {% if recipe.img_url != '' %}
                                 {{ recipe.img_url }}
@@ -24,7 +24,7 @@
                             {% endif %}
                             );">
                         </div>
-                        <div class="card-content white-text">
+                        <div class="card-content white-text content-wrapper">
                             <!-- Recipe Modal Trigger -->
                             <a data-target="recipe-modal-{{ recipe.id }}" class="btn card-title text-link modal-trigger">{{ recipe.recipe_name }}</a>
                             <p>

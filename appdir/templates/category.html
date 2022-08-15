@@ -7,7 +7,7 @@
         {% if recipes|length > 0 %}
             {% for recipe in recipes %}
                 <div class="col s12 m6 l3">
-                    <div class="card red accent-5 text-shadow center-align">
+                    <div class="card red-subtheme text-shadow center-align">
                         <div class="card-image" style="background-image: url(
                             {% if recipe.img_url != '' %}
                                 {{ recipe.img_url }}
@@ -16,7 +16,7 @@
                             {% endif %}
                             );">
                         </div>
-                        <div class="card-content white-text">
+                        <div class="card-content white-text content-wrapper">
                             <!-- Modal Trigger -->
                             <a href="#recipe-modal-{{ recipe.id }}" class="card-title modal-trigger text-link">{{ recipe.recipe_name }}</a>
                             <p>Owner: 
@@ -29,7 +29,7 @@
                         </div>
                         <div class="card-action">
                             <!-- Additional Modal Trigger -->
-                            <a href="#recipe-modal-{{ recipe.id }}" class="btn red darken-4 modal-trigger">View Details</a>
+                            <a href="#recipe-modal-{{ recipe.id }}" class="btn card-btn modal-trigger">View Details</a>
                         </div>
                     </div>
                 </div>
