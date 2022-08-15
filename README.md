@@ -224,6 +224,14 @@ The [PEP8 Online Validator](http://pep8online.com/) was used to validate the Pyt
 ## Manual Testing
 Throughout the entirety of the project, manual testing was utilised to ensure that functions worked as intended and user feedback behaved as expected. This involved extensive use of in-browser testing where [Chrome DevTools](https://developer.chrome.com/docs/devtools/) was used to view layout changes in real-time, as well as testing the app routes and user feedback.
 
+Each time a Git commit was pushed to GitHub, the deployed version of the site (hosted by Heroku) was tested to ensure that it matched the development version.
+
+### Local Version:
+![Development version](appdir/assets/docs/local-version.png)
+
+### Final Deployed Version:
+![Final Deployed version](appdir/assets/docs/deployed-version.png)
+
 ## Testing User Stories from User Experience (UX) Section
 
 * ### New User Goals
