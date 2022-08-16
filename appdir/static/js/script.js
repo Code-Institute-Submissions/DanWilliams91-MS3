@@ -37,7 +37,7 @@ var submitActive = false;
      * Add Category or Edit Category page, unless a form is submitted (submitActive = true).
      */
     $(window).on('beforeunload', function() {
-        if ($("#ingredients").length > 0 || $("#category_img").length > 0 && !submitActive) {
+        if (($("#ingredients").length > 0 || $("#category_img").length > 0) && !submitActive) {
             // var c = confirm("Navigating from this page will result in all changes being lost. Are you sure you want to leave this page?");
             if (confirm("Navigating from this page will result in all changes being lost. Are you sure you want to leave this page?")) {
                 return true;
