@@ -1,51 +1,37 @@
-/* Set global variable to state a form is not currently being submitted */
-var submitActive = false;
-
 // Functions begin here
 
     /**
      * Initializes the Materialize components and their workarounds.
      * Also calls the checkScreenSize function once the page loads.
      */
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(".dropdown-trigger").dropdown();
         $(".sidenav").sidenav();
         $(".modal").modal();
         $("select").formSelect();
-        $(".tooltipped").tooltip({
-            enterDelay: 300
-        });
-        $("select[required]").css({
-            display: "block",
-            height: 0,
-            padding: 0,
-            width: 0,
-            position: "absolute"
-        });
+        $(".tooltipped").tooltip({enterDelay: 300});
+        $("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: "absolute"});
         /* Workaround for Materialize setting readonly="true" on disabled dropdowns */
         $(".select-dropdown.dropdown-trigger").removeAttr("readonly").prop("readonly", true);
         checkScreenSize();
-        /* Set global variable submitActive to true when a form is submitted */
-        $("form").on("submit", function () {
-            submitActive = true;
+        confirmExit();
         });
-    });
-
 
     /**
      * Displays a confirmation dialog when the user attempts to leave either the Add Recipe, Edit Recipe,
-     * Add Category or Edit Category page, unless a form is submitted (submitActive = true).
+     * Add Category or Edit Category page.
      */
-    $(window).on('beforeunload', function() {
-        if ($("#ingredients").length > 0 || $("#category_img").length > 0 && !submitActive) {
-            // var c = confirm("Navigating from this page will result in all changes being lost. Are you sure you want to leave this page?");
-            if (confirm("Navigating from this page will result in all changes being lost. Are you sure you want to leave this page?")) {
-                return true;
-            } else {
-                return false;
-            }
+    function confirmExit() {
+        if ($("#ingredients").length > 0 || $("#category_img").length > 0) {
+            $(window).on('beforeunload', function () {
+                var c = confirm("Navigating from this page will result in all changes being lost. Are you sure you want to leave this page?");
+                if (c) {
+                    return true;
+                } else
+                    return false;
+            })
         }
-    });
+    }    
 
 
     /** 
@@ -60,7 +46,6 @@ var submitActive = false;
             $("#scroll-btn").css("display", "none");
         }
     }
-
 
     /** 
      * Scrolls to the top of the page when the user clicks on the button with an
@@ -105,11 +90,11 @@ var submitActive = false;
     $("#scroll-btn").on("click", function() {
         topFunction();
     });
-
+    
 
     /** Redirects the user to the previous webpage when any ".btn-cancel" button is clicked */
     $(".btn-cancel").on("click", function() {
         window.history.back();
     });
-
+    
 //Event handlers end here
